@@ -4,6 +4,15 @@
 
 ## Getting Started
 
+### 变量命名规范
+
+|  变量   | 规范  |
+|  ----  | ----  |
+| 页面 | Page + 大驼峰 |
+| 模型类 | Model + 大驼峰 |
+| 接口函数 | api + 大驼峰 |
+| 状态管理类  | Provider + 大驼峰 |
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:

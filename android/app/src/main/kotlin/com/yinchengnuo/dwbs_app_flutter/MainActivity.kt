@@ -1,4 +1,4 @@
-package com.yinchengnuo.dwbs_app_flutter
+package com.UNI00FF211
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

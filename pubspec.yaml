@@ -14,12 +14,19 @@ description: 使用 Flutter 对大卫博士手机App的一次尝试性重构。
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  dio: ^3.0.8
+  flutter_swiper: ^1.1.6
+  provider: ^4.0.4
+  oktoast: ^2.3.1+1
+  webview_flutter: ^0.3.19+8
+  fl_chart: ^0.8.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -39,6 +46,51 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - lib/images/home/tabbar/index.png
+    - lib/images/home/tabbar/index-act.png
+    - lib/images/home/tabbar/data.png
+    - lib/images/home/tabbar/data-act.png
+    - lib/images/home/tabbar/comm.png
+    - lib/images/home/tabbar/comm-act.png
+    - lib/images/home/tabbar/my.png
+    - lib/images/home/tabbar/my-act.png
+    - lib/images/home/index/down-order.png
+    - lib/images/home/index/income-running.png
+    - lib/images/home/index/income-shop.png
+    - lib/images/home/index/index-news.png
+    - lib/images/home/index/invite-proxy.png
+    - lib/images/home/index/manage-fortune.png
+    - lib/images/home/index/manage-order.png
+    - lib/images/home/index/manage-poeple.png
+    - lib/images/home/index/my-invite.png
+    - lib/images/home/index/my-order.png
+    - lib/images/home/index/my-stock.png
+    - lib/images/home/index/place-order.png
+    - lib/images/home/index/register-examine.png
+    - lib/images/home/index/reward-in.png
+    - lib/images/home/index/reward-out.png
+    - lib/images/home/index/team-achievement.png
+    - lib/images/home/index/team-manage.png
+    - lib/images/public/data-card.png
+    - lib/images/public/how-to-use.png
+    - lib/images/public/crown.png
+    - lib/images/public/share.png
+    - lib/images/public/like.png
+    - lib/images/public/like-fill.png
+    - lib/images/public/heart.png
+    - lib/images/public/heart-fill.png
+    - lib/images/home/my/bg.png
+    - lib/images/home/my/user-up.png
+    - lib/images/home/my/zhengbasai.png
+    - lib/images/home/my/shalong.png
+    - lib/images/home/my/mixun.png
+    - lib/images/home/my/message.png
+    - lib/images/home/my/safe.png
+    - lib/images/home/my/auth.png
+    - lib/images/home/my/help.png
+    - lib/images/home/my/set.png
+    - lib/images/home/my/has-shop.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

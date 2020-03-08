@@ -46,7 +46,7 @@ class CommListItem extends StatelessWidget {
                                             shadows: [BoxShadow(blurRadius: Ycn.px(1), color: Theme.of(context).textTheme.display1.color)],
                                           ),
                                         )
-                                      : Container(width: 0, height: 0))
+                                      :Container(width: 0, height: 0))
                                   .toList()
                             ],
                           ),

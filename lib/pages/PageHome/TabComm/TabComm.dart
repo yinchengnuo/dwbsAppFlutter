@@ -89,13 +89,12 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ProviderComm())],
-      child: Scaffold(
-        appBar: Ycn.appBar(context, back: false, title: '社区'),
-        body: Consumer(builder: (BuildContext context, ProviderComm comm, Widget child) {
-          this.__comm = comm;
-          return Column(
+    return Consumer(
+      builder: (BuildContext context, ProviderComm comm, Widget child) {
+        this.__comm = comm;
+        return Scaffold(
+          appBar: Ycn.appBar(context, back: false, title: '社区'),
+          body: Column(
             children: <Widget>[
               Container(
                 width: double.infinity,
@@ -103,10 +102,11 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
                 child: Material(
                   color: Colors.white,
                   child: TabBar(
-                      controller: this._tabController,
-                      indicatorWeight: Ycn.px(6),
-                      indicatorPadding: EdgeInsets.fromLTRB(Ycn.px(14), 0, Ycn.px(14), 0),
-                      tabs: [Tab(text: '热门推荐'), Tab(text: '最新更新'), Tab(text: '常来微聊'), Tab(text: '我的收藏')]),
+                    controller: this._tabController,
+                    indicatorWeight: Ycn.px(6),
+                    indicatorPadding: EdgeInsets.fromLTRB(Ycn.px(14), 0, Ycn.px(14), 0),
+                    tabs: [Tab(text: '热门推荐'), Tab(text: '最新更新'), Tab(text: '常来微聊'), Tab(text: '我的收藏')],
+                  ),
                 ),
               ),
               Expanded(
@@ -124,16 +124,16 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
                             : RefreshIndicator(
                                 onRefresh: this._pageRefresh,
                                 child: ListView.builder(
-                                  cacheExtent: 1000,
                                   controller: this._pageData['controllers'][this.__comm.commList.indexOf(item)],
                                   itemCount: this.__comm.commList[this.__comm.commList.indexOf(item)].length,
                                   itemBuilder: (BuildContext context, int index) => CommListItemWrapper(
-                                      data: this.__comm.commList[this.__comm.commList.indexOf(item)][index],
-                                      last: index == this.__comm.commList[this.__comm.commList.indexOf(item)].length - 1,
-                                      page: this._pageData['page'][this.__comm.commList.indexOf(item)],
-                                      type: this._pageData['index'],
-                                      index: index,
-                                      provider: this.__comm),
+                                    index: index,
+                                    provider: this.__comm,
+                                    type: this._pageData['index'],
+                                    page: this._pageData['page'][this.__comm.commList.indexOf(item)],
+                                    data: this.__comm.commList[this.__comm.commList.indexOf(item)][index],
+                                    last: index == this.__comm.commList[this.__comm.commList.indexOf(item)].length - 1,
+                                  ),
                                 ),
                               ),
                       )
@@ -141,9 +141,9 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
                 ),
               )
             ],
-          );
-        }),
-      ),
+          ),
+        );
+      },
     );
   }
 

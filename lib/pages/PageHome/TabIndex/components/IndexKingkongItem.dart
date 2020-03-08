@@ -18,7 +18,7 @@ class IndexKingkongItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.asset(this.src, width: Ycn.px(88), height: Ycn.px(88)),
-              SizedBox(height: Ycn.px(8)),
+              SizedBox(height: Ycn.px(13)),
               Text(this.title, style: TextStyle(fontSize: Ycn.px(32))),
             ],
           ),

@@ -31,7 +31,7 @@ class DataTeam extends StatelessWidget {
                         CircularProgressIndicator(
                           value: this.data['month_team_num'] / this.data['total_team_num'],
                           strokeWidth: 10,
-                          backgroundColor: Color(int.parse('FFB769', radix: 16)).withAlpha(255),
+                          backgroundColor: Ycn.getColor('#FFB769'),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,

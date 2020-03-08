@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:convert';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +18,11 @@ class Ycn {
 
   // 生成自定义 appBar
   static appBar(context, {back: true, title: '', action: false, transparent: false}) => PreferredSize(
+        preferredSize: Size.fromHeight(Ycn.px(86)),
         child: AppBar(
           title: Text(title),
           centerTitle: true,
+          brightness: Brightness.light,
           automaticallyImplyLeading: false,
           elevation: transparent == false ? px(1) : 0,
           backgroundColor: transparent == false ? Colors.white : Colors.transparent,
@@ -32,7 +35,6 @@ class Ycn {
               : null,
           actions: action == false ? <Widget>[] : <Widget>[action],
         ),
-        preferredSize: Size.fromHeight(px(86)),
       );
 
   // 格式化时间
@@ -48,6 +50,7 @@ class Ycn {
     ];
   }
 
+  // 数字打点
   static String numDot(string) => string.toString().replaceAllMapped(RegExp(r"(\d)(?=(?:\d{3})+\b)"), (match) => '${match.group(1)},');
 
   // toast 方法
@@ -57,7 +60,7 @@ class Ycn {
           child: Container(
             padding: EdgeInsets.fromLTRB(Ycn.px(24), Ycn.px(12), Ycn.px(24), Ycn.px(12)),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(px(8)), color: Color.fromRGBO(0, 0, 0, 0.6)),
-            child: Text(info.toString(), style: TextStyle(fontSize: Ycn.px(26), height: 1.5, letterSpacing: Ycn.px(2))),
+            child: Text(info.toString(), style: TextStyle(fontSize: Ycn.px(36), height: 1.5, letterSpacing: Ycn.px(2))),
           ),
         ),
       );
@@ -73,4 +76,13 @@ class Ycn {
     });
     return max;
   }
+
+  // 颜色字符串转 Color
+  static Color getColor(string) => Color(int.parse(string.toString().replaceAll('#', ''), radix: 16)).withAlpha(255);
+
+  // 等待不为 null 时取值
+  static String waitString(data, key) => data == null ? '' : data[key].toString();
+
+  // 克隆
+  static clone(map) => jsonDecode(jsonEncode(map));
 }

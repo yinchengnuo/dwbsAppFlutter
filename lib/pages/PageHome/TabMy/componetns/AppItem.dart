@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../common/Ycn.dart';
+import '.././../../../common/components.dart';
 
 class AppItem extends StatelessWidget {
   final img, title, route, msg;
@@ -29,16 +30,10 @@ class AppItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     this.msg == false
-                        ? Container(width: 0, height: 0)
-                        : Container(
-                            width: Ycn.px(32),
-                            height: Ycn.px(32),
-                            alignment: Alignment(0, 0),
-                            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(Ycn.px(32))),
-                            child: Text(this.msg.toString(), style: TextStyle(fontSize: Ycn.px(24), color: Colors.white)),
-                          ),
+                        ?Container(width: 0, height: 0)
+                        : RedDot(number: 999),
                     SizedBox(width: Ycn.px(12)),
-                    Icon(Icons.arrow_forward_ios, size: Ycn.px(29), color: Color(int.parse('B7B7B7', radix: 16)).withAlpha(255))
+                    Icon(Icons.arrow_forward_ios, size: Ycn.px(29), color: Ycn.getColor('#B7B7B7'))
                   ],
                 ),
               ],

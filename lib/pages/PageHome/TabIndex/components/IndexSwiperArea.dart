@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import '../../../../common/Ycn.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class IndexSwiperArea extends StatelessWidget {
@@ -27,7 +27,7 @@ class IndexSwiperArea extends StatelessWidget {
                   onPressed: () {
                     print('点击了第${index + 1}张图片');
                   },
-                  child: Image.network(swiperList[index]['imgurl'], width: Ycn.px(750), height: Ycn.px(250), fit: BoxFit.fitWidth)),
+                  child: Image.network(swiperList[index]['imgurl'], width: Ycn.px(750), height: Ycn.px(250), fit: BoxFit.cover)),
             ),
           ),
           Container(

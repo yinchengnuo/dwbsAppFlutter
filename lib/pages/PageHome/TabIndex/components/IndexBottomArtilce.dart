@@ -52,7 +52,7 @@ class IndexBottomArtilce extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          height: Ycn.px(190),
+                          height: Ycn.px(180),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -61,7 +61,7 @@ class IndexBottomArtilce extends StatelessWidget {
                                   articleInfo['title'],
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: Ycn.px(32)),
+                                  style: TextStyle(height: 1.25, fontSize: Ycn.px(32)),
                                 ),
                               ),
                               Container(
@@ -69,7 +69,7 @@ class IndexBottomArtilce extends StatelessWidget {
                                   '        ' + articleInfo['summary'],
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: Ycn.px(24)),
+                                  style: TextStyle(height: 1.25, fontSize: Ycn.px(24)),
                                 ),
                               ),
                               Container(

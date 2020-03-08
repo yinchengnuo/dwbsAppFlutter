@@ -1,3 +1,4 @@
+import '../../../apis/app.dart'; // 引入接口
 import '../../../common/Ycn.dart';
 import 'components/IndexTopItem.dart'; // 引入首页组件
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'components/IndexSwiperArea.dart'; // 引入首页组件
 import 'components/IndexKingkongItem.dart'; // 引入首页组件
 import 'components/IndexBottomArtilce.dart'; // 引入首页组件
 
-import '../../../apis/app.dart'; // 引入接口
+import 'package:fluwx/fluwx.dart' as fluwx;
 
 class TabIndex extends StatefulWidget {
   TabIndex({Key key}) : super(key: key);
@@ -24,7 +25,7 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
   }
 
   // 触发下拉刷新
-  Future<void> _pageRefresh() async {
+  Future<void> _request() async {
     this._indexData = (await apiAppIndex()).data; // 发送网络请求
     setState(() {}); // 渲染视图
   }
@@ -32,7 +33,7 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    this._pageRefresh(); // 触发下拉刷新，获取数据
+    this._request(); // 触发下拉刷新，获取数据
   }
 
   @override
@@ -43,7 +44,7 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
       body: this._indexData == null
           ? Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: this._pageRefresh,
+              onRefresh: this._request,
               child: ScrollConfiguration(
                 behavior: NoBehavior(),
                 child: SingleChildScrollView(
@@ -65,7 +66,7 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
                         margin: EdgeInsets.only(bottom: Ycn.px(12)),
                         child: Wrap(
                           children: <Widget>[
-                            IndexKingkongItem(src: 'lib/images/home/index/place-order.png', title: '订货下单', route: '/test'),
+                            IndexKingkongItem(src: 'lib/images/home/index/place-order.png', title: '订货下单', route: '/good-list'),
                             IndexKingkongItem(src: 'lib/images/home/index/my-order.png', title: '我的订单', route: '/test'),
                             IndexKingkongItem(src: 'lib/images/home/index/down-order.png', title: '下级订单', route: '/test'),
                             IndexKingkongItem(src: 'lib/images/home/index/my-stock.png', title: '我的库存', route: '/test'),

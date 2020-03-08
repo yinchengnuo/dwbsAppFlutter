@@ -31,7 +31,7 @@ class DataIncome extends StatelessWidget {
                         CircularProgressIndicator(
                           value: this.data['month_income'] / this.data['total_income'],
                           strokeWidth: 10,
-                          backgroundColor: Color(int.parse('FFB769', radix: 16)).withAlpha(255),
+                          backgroundColor: Ycn.getColor('#FFB769'),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,

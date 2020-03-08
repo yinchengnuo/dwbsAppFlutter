@@ -15,7 +15,7 @@ class OrderItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(this.onum.toString(), style: TextStyle(color: Color(int.parse('7B5533', radix: 16)).withAlpha(255), fontSize: Ycn.px(36))),
+              Text(this.onum.toString(), style: TextStyle(color: Ycn.getColor('#7B5533'), fontSize: Ycn.px(36))),
               Text(this.title, style: TextStyle(fontSize: Ycn.px(26))),
             ],
           ),

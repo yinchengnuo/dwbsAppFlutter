@@ -19,7 +19,7 @@ class _TabDataState extends State<TabData> with AutomaticKeepAliveClientMixin {
   Map _dataData;
 
   // 触发下拉刷新
-  Future<void> _pageRefresh() async {
+  Future<void> _request() async {
     this._dataData = (await apiAppData()).data; // 发送网络请求
     setState(() {}); // 渲染视图
   }
@@ -27,7 +27,7 @@ class _TabDataState extends State<TabData> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    this._pageRefresh(); // 触发下拉刷新，获取数据
+    this._request(); // 触发下拉刷新，获取数据
   }
 
   @override
@@ -35,9 +35,9 @@ class _TabDataState extends State<TabData> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       appBar: Ycn.appBar(context, back: false, title: '数据'),
       body: this._dataData == null
-          ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor)))
+          ? Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: this._pageRefresh,
+              onRefresh: this._request,
               child: ScrollConfiguration(
                   behavior: NoBehavior(),
                   child: SingleChildScrollView(
@@ -49,7 +49,7 @@ class _TabDataState extends State<TabData> with AutomaticKeepAliveClientMixin {
                         DataIncome(data: this._dataData['data']),
                         DataTeam(data: this._dataData['data']),
                         this._dataData['data']['team_rank'].length == 0
-                            ? Container(width: 0, height: 0)
+                            ?Container(width: 0, height: 0)
                             : DataTeamRank(data: this._dataData['data']),
                       ],
                     ),

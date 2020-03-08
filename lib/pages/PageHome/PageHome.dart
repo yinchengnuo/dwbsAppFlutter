@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import '../../common/Ycn.dart';
-import '../../common/EventBus.dart';
-
 import 'TabMy/TabMy.dart';
 import 'TabComm/TabComm.dart';
 import 'TabData/TabData.dart';
 import 'TabIndex/TabIndex.dart';
+import '../../common/Ycn.dart';
+import '../../common/EventBus.dart';
+import '../../common/components.dart';
+import 'package:flutter/material.dart';
+
+import '../../common/Storage.dart';
 
 class PageHome extends StatefulWidget {
   PageHome({Key key}) : super(key: key);
@@ -33,8 +35,12 @@ class _PageHomeState extends State<PageHome> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // 静态图片预加载
     precacheImage(AssetImage('lib/images/home/tabbar/index.png'), context);
     precacheImage(AssetImage('lib/images/home/tabbar/index-act.png'), context);
     precacheImage(AssetImage('lib/images/home/tabbar/data.png'), context);
@@ -45,12 +51,9 @@ class _PageHomeState extends State<PageHome> {
     precacheImage(AssetImage('lib/images/home/tabbar/my-act.png'), context);
 
     EventBus().on('RequestError', (arg) {
-      // 监听请求失败事件
       print('监听到EventBus RequestError事件');
-      // Scaffold.of(context).showSnackBar(SnackBar(
-      //   content: Text('监听到EventBus RequestError事件'),
-      // ));
-      // Navigator.of(context).pushNamed('/');
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+      Navigator.of(context).pushReplacementNamed('/login');
     });
 
     return Scaffold(
@@ -74,20 +77,12 @@ class _PageHomeState extends State<PageHome> {
                         onTap: () => this._switchTab(this._tabList.indexOf(item)),
                         child: this._tabList.indexOf(item) == 3
                             ? Stack(
-                                fit: StackFit.expand,
                                 children: <Widget>[
-                                  CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
-                                  Container(
-                                    alignment: Alignment(0, 0),
-                                    child: Container(
-                                      width: Ycn.px(32),
-                                      height: Ycn.px(32),
-                                      alignment: Alignment(0, 0),
-                                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(Ycn.px(32))),
-                                      transform: Matrix4.translationValues(Ycn.px(24), -Ycn.px(24), 0),
-                                      child: Text('6', style: TextStyle(fontSize: Ycn.px(24), color: Colors.white)),
-                                    ),
+                                  Positioned.fill(
+                                    child: CustomBottomNavigationBarItem(
+                                        item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
                                   ),
+                                  Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: 999)),
                                 ],
                               )
                             : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
@@ -122,7 +117,7 @@ class CustomBottomNavigationBarItem extends StatelessWidget {
             fontSize: Ycn.px(22),
             color: this.activeIndex == this.index ? Theme.of(context).accentColor : Theme.of(context).textTheme.body2.color,
           ),
-        )
+        ),
       ],
     );
   }

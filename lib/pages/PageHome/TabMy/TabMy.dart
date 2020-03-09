@@ -160,7 +160,7 @@ class _TabMyState extends State<TabMy> {
             AppItem(img: 'lib/images/home/my/auth.png', title: '我的授权', route: '/test'),
             AppItem(img: 'lib/images/home/my/help.png', title: '问题帮助', route: '/test'),
             SizedBox(height: Ycn.px(10)),
-            AppItem(img: 'lib/images/home/my/set.png', title: '系统设置', route: '/test'),
+            AppItem(img: 'lib/images/home/my/set.png', title: '系统设置', route: '/system-set'),
           ],
         ),
       ),

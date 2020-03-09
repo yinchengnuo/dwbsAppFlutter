@@ -14,13 +14,15 @@ class Storage {
     }
   }
 
-  static setter(key, value) {
+  static setter(key, value) async {
     if (value is List || value is Map) {
-      prefs.setString(key, jsonEncode(value));
+      await prefs.setString(key, jsonEncode(value));
     } else {
-      prefs.setString(key, value);
+      await prefs.setString(key, value);
     }
   }
 
-  static delstorage() {}
+  static del(key) async {
+    await prefs.remove(key);
+  }
 }

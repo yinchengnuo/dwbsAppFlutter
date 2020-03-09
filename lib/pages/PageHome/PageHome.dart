@@ -1,13 +1,12 @@
 import 'TabMy/TabMy.dart';
 import 'TabComm/TabComm.dart';
 import 'TabData/TabData.dart';
-import 'TabIndex/TabIndex.dart';
+import '../../apis/user.dart';
 import '../../common/Ycn.dart';
+import 'TabIndex/TabIndex.dart';
 import '../../common/EventBus.dart';
 import '../../common/components.dart';
 import 'package:flutter/material.dart';
-
-import '../../common/Storage.dart';
 
 class PageHome extends StatefulWidget {
   PageHome({Key key}) : super(key: key);
@@ -16,6 +15,7 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
+  int _activeIndex = 0;
   PageController _pageController = PageController();
   List<Widget> _pageList = [TabIndex(), TabData(), TabComm(), TabMy()];
 
@@ -26,7 +26,7 @@ class _PageHomeState extends State<PageHome> {
     {'title': '我的', 'icon': 'lib/images/home/tabbar/my.png', 'activeIcon': 'lib/images/home/tabbar/my-act.png'}
   ];
 
-  int _activeIndex = 0;
+  // tabbar 切换
   void _switchTab(index) {
     setState(() {
       this._activeIndex = index;
@@ -37,6 +37,10 @@ class _PageHomeState extends State<PageHome> {
   @override
   void initState() {
     super.initState();
+    apiUserStatus().then((status) {
+      final res1 = status.data;
+      print(res1['data']);
+    });
   }
 
   @override
@@ -50,18 +54,14 @@ class _PageHomeState extends State<PageHome> {
     precacheImage(AssetImage('lib/images/home/tabbar/my.png'), context);
     precacheImage(AssetImage('lib/images/home/tabbar/my-act.png'), context);
 
-    EventBus().on('RequestError', (arg) {
-      print('监听到EventBus RequestError事件');
+    // 监听 token 失效跳转
+    EventBus().on('LOGIN', (arg) {
       Navigator.of(context).popUntil(ModalRoute.withName('/'));
       Navigator.of(context).pushReplacementNamed('/login');
     });
 
     return Scaffold(
-      body: PageView(
-        children: this._pageList,
-        controller: this._pageController,
-        physics: NeverScrollableScrollPhysics(),
-      ),
+      body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
       bottomNavigationBar: Container(
         height: Ycn.px(97),
         decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Color.fromRGBO(178, 178, 178, 0.1)))),

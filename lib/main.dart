@@ -1,3 +1,4 @@
+
 import 'common/Ycn.dart'; // 引入工具库
 import 'common/dio.dart'; // 引入 dio 单例
 import 'package:oktoast/oktoast.dart';
@@ -18,6 +19,9 @@ import 'package:provider/provider.dart'; // 引入 provider
 import 'provider/ProviderComm.dart'; // 社区相关状态
 import 'provider/ProviderChoosedSize.dart'; // 已选中商品相关状态
 import 'provider/ProviderShopCar.dart'; // 购物车相关状态
+
+import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
+import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.2.107/dwbsapp'; // 配置 baseUrl
+    // dio.options.baseUrl = 'http://192.168.2.108/dwbsapp'; // 配置 baseUrl
     dio.options.baseUrl = 'http://192.168.0.102/dwbsapp'; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
@@ -106,8 +110,8 @@ class _MyAppState extends State<MyApp> {
               },
             ),
           ),
-          routes: routes, // 路由表
-          initialRoute: Storage.getter('token').isEmpty ? '/login' : '/', // 首页路由
+          routes: routes,
+          home: Storage.getter('token').toString().isEmpty ? PageLogin() : PageHome(),
           onUnknownRoute: onUnknownRoute, // 未知路由处理方法
           onGenerateRoute: onGenerateRoute, // 全局路由守卫，用于使用命名路由时传参
           navigatorObservers: navigatorObservers, // 应用 Navigator 的监听器

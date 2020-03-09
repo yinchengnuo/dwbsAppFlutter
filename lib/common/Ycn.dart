@@ -58,9 +58,9 @@ class Ycn {
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: Ycn.px(567)),
           child: Container(
-            padding: EdgeInsets.fromLTRB(Ycn.px(24), Ycn.px(12), Ycn.px(24), Ycn.px(12)),
+            padding: EdgeInsets.symmetric(vertical: Ycn.px(8), horizontal: Ycn.px(12)),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(px(8)), color: Color.fromRGBO(0, 0, 0, 0.6)),
-            child: Text(info.toString(), style: TextStyle(fontSize: Ycn.px(36), height: 1.5, letterSpacing: Ycn.px(2))),
+            child: Text(info.toString(), style: TextStyle(fontSize: Ycn.px(32), height: 1.25, letterSpacing: Ycn.px(2))),
           ),
         ),
       );

@@ -14,8 +14,7 @@ class _PageSystemSetState extends State<PageSystemSet> {
   // 点击退出登陆
   void _logout() async {
     await Storage.del('token');
-    Navigator.of(context).popUntil(ModalRoute.withName('/'));
-    Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
   }
 
   @override

@@ -30,12 +30,12 @@ class MyBehavior extends ScrollBehavior {
 
 // 自定义modal
 class CustomModal extends Dialog {
-  final title, content, cancel, input;
-  CustomModal({this.title = '提示', this.content, this.cancel = true, this.input});
+  final img, width, height, title, content, cancel, inputNum;
+  CustomModal({this.img, this.width, this.height, this.title, this.content, this.cancel, this.inputNum});
   TextEditingController _textEditingController = TextEditingController();
 
   void _comfirm(context) {
-    if (this.input != null) {
+    if (this.inputNum != null) {
       this._textEditingController.text.isEmpty
           ? Navigator.of(context).pop()
           : Navigator.of(context).pop({'value': num.parse(this._textEditingController.text)});
@@ -45,129 +45,140 @@ class CustomModal extends Dialog {
   }
 
   Widget build(BuildContext context) {
-    if (input != null) {
-      this._textEditingController.text = this.input > 0 ? this.input.toString() : '';
+    if (inputNum != null) {
+      this._textEditingController.text = this.inputNum > 0 ? this.inputNum.toString() : '';
     }
     return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Ycn.px(12)),
-        child: Container(
-          width: Ycn.px(654),
-          height: Ycn.px(456),
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: Ycn.px(98),
-                alignment: Alignment(0, 0),
-                child: Text(
-                  this.title,
-                  style: TextStyle(
-                    fontSize: Ycn.px(42),
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.none,
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: this.input != null
-                    ? Center(
-                        child: Container(
-                          width: Ycn.px(321),
-                          height: Ycn.px(147),
-                          child: Material(
-                            child: TextField(
-                              autofocus: true,
-                              cursorWidth: Ycn.px(6),
-                              textAlign: TextAlign.center,
-                              enableInteractiveSelection: false,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-                              style: TextStyle(fontSize: Ycn.px(88)),
-                              controller: this._textEditingController,
-                              cursorRadius: Radius.circular(Ycn.px(2)),
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(border: InputBorder.none),
-                              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ...this
-                              .content
-                              .map(
-                                (content) => Container(
-                                  margin: EdgeInsets.symmetric(vertical: Ycn.px(2)),
-                                  child: Text(
-                                    content,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: Ycn.px(36),
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.none,
-                                      color: Theme.of(context).textTheme.body1.color,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList()
-                        ],
-                      ),
-              ),
-              Container(
-                height: Ycn.px(98),
-                decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Theme.of(context).textTheme.display1.color))),
-                child: Row(
+      child: this.img == null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(Ycn.px(12)),
+              child: Container(
+                width: Ycn.px(654),
+                height: Ycn.px(432),
+                color: Colors.white,
+                child: Column(
                   children: <Widget>[
-                    this.cancel
-                        ? Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border(right: BorderSide(width: Ycn.px(1), color: Theme.of(context).textTheme.display1.color))),
-                              child: MaterialInkWell(
-                                onTap: () => Navigator.of(context).pop(),
-                                child: Center(
-                                  child: Text(
-                                    '取消',
-                                    style: TextStyle(
-                                      fontSize: Ycn.px(36),
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.none,
-                                      color: Theme.of(context).textTheme.display1.color,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        :Container(width: 0, height: 0),
-                    Expanded(
-                      child: MaterialInkWell(
-                        onTap: () => this._comfirm(context),
-                        child: Center(
-                          child: Text(
-                            '确定',
-                            style: TextStyle(
-                                fontSize: Ycn.px(36),
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.none,
-                                color: Theme.of(context).accentColor),
-                          ),
+                    Container(
+                      alignment: Alignment(0, 0),
+                      margin: EdgeInsets.only(top: Ycn.px(12)),
+                      child: Text(
+                        this.title == null ? '提示' : title,
+                        style: TextStyle(
+                          fontSize: Ycn.px(42),
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none,
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                     ),
+                    Expanded(
+                      child: this.inputNum != null
+                          ? Center(
+                              child: Container(
+                                width: Ycn.px(321),
+                                height: Ycn.px(147),
+                                color: Colors.white,
+                                child: Material(
+                                  child: TextField(
+                                    autofocus: true,
+                                    cursorWidth: Ycn.px(6),
+                                    textAlign: TextAlign.center,
+                                    enableInteractiveSelection: false,
+                                    keyboardType: TextInputType.number,
+                                    textInputAction: TextInputAction.done,
+                                    style: TextStyle(fontSize: Ycn.px(88)),
+                                    controller: this._textEditingController,
+                                    cursorRadius: Radius.circular(Ycn.px(2)),
+                                    cursorColor: Theme.of(context).accentColor,
+                                    decoration: InputDecoration(border: InputBorder.none),
+                                    inputFormatters: [WhitelistingTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  ...this
+                                      .content
+                                      .map(
+                                        (content) => Container(
+                                          margin: EdgeInsets.symmetric(horizontal: Ycn.px(24)),
+                                          child: Text(
+                                            content,
+                                            maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: Ycn.px(36),
+                                              fontWeight: FontWeight.w500,
+                                              decoration: TextDecoration.none,
+                                              color: Theme.of(context).textTheme.body1.color,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ],
+                              ),
+                            ),
+                    ),
+                    Container(
+                      height: Ycn.px(98),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(top: BorderSide(width: Ycn.px(1), color: Theme.of(context).textTheme.display1.color)),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          this.cancel == null
+                              ? Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border(right: BorderSide(width: Ycn.px(1), color: Theme.of(context).textTheme.display1.color))),
+                                    child: MaterialInkWell(
+                                      onTap: () => Navigator.of(context).pop(),
+                                      child: Center(
+                                        child: Text(
+                                          '取消',
+                                          style: TextStyle(
+                                            fontSize: Ycn.px(36),
+                                            fontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.none,
+                                            color: Theme.of(context).textTheme.display1.color,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(width: 0, height: 0),
+                          Expanded(
+                            child: MaterialInkWell(
+                              onTap: () => this._comfirm(context),
+                              child: Center(
+                                child: Text(
+                                  '确定',
+                                  style: TextStyle(
+                                      fontSize: Ycn.px(36),
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.none,
+                                      color: Theme.of(context).accentColor),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            )
+          : GestureDetector(onTap: () => Navigator.of(context).pop({}), child: Image.asset(this.img, width: this.width, height: this.height)),
     );
   }
 }
@@ -190,7 +201,7 @@ class RedDot extends StatelessWidget {
               child: Text(this.number > 999 ? '999+' : this.number.toString(), style: TextStyle(fontSize: Ycn.px(25), color: Colors.white)),
             ),
           )
-        :Container(width: 0, height: 0);
+        : Container(width: 0, height: 0);
   }
 }
 
@@ -208,7 +219,7 @@ class Loading extends StatelessWidget {
           this.child,
           this.loading
               ? Container(alignment: Alignment(0, 0), color: Color.fromRGBO(0, 0, 0, 0.1), child: CircularProgressIndicator())
-              :Container(width: 0, height: 0)
+              : Container(width: 0, height: 0)
         ],
       ),
     );
@@ -225,7 +236,7 @@ class CustomCounter extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) => CustomModal(title: '请输入数量', input: value),
+      builder: (BuildContext context) => CustomModal(title: '请输入数量', inputNum: value),
     ).then((res) {
       if (res != null) {
         if (res['value'] >= this.min) {

@@ -17,8 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:provider/provider.dart'; // 引入 provider
 import 'provider/ProviderComm.dart'; // 社区相关状态
-import 'provider/ProviderChoosedSize.dart'; // 已选中商品相关状态
 import 'provider/ProviderShopCar.dart'; // 购物车相关状态
+import 'provider/ProviderChoosedSize.dart'; // 已选中商品相关状态
+import 'provider/ProviderUserInfo.dart'; // 用户信心状态
 
 import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
 import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
@@ -58,8 +59,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.2.108/dwbsapp'; // 配置 baseUrl
-    dio.options.baseUrl = 'http://192.168.0.102/dwbsapp'; // 配置 baseUrl
+    // dio.options.baseUrl = 'http://192.168.2.110/dwbsapp'; // 配置 baseUrl
+    dio.options.baseUrl = 'http://192.168.0.101/dwbsapp'; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
     // this._initWx(); // 初始化微信
@@ -71,6 +72,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderComm()),
         ChangeNotifierProvider(create: (_) => ProviderShopCar()),
+        ChangeNotifierProvider(create: (_) => ProviderUserInfo()),
         ChangeNotifierProvider(create: (_) => ProviderChoosedSize()),
       ],
       child: OKToast(

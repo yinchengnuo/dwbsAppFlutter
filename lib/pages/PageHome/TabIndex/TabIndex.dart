@@ -27,7 +27,9 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
   // 触发下拉刷新
   Future<void> _request() async {
     this._indexData = (await apiAppIndex()).data; // 发送网络请求
-    setState(() {}); // 渲染视图
+    try {
+      setState(() {}); // 渲染视图
+    } catch (e) {}
   }
 
   @override

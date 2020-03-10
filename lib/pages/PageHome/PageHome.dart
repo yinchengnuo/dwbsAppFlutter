@@ -1,12 +1,17 @@
+
 import 'TabMy/TabMy.dart';
+import '../../apis/app.dart';
 import 'TabComm/TabComm.dart';
 import 'TabData/TabData.dart';
 import '../../apis/user.dart';
 import '../../common/Ycn.dart';
 import 'TabIndex/TabIndex.dart';
+import '../../common/Storage.dart';
 import '../../common/EventBus.dart';
 import '../../common/components.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../provider/ProviderUserInfo.dart';
 
 class PageHome extends StatefulWidget {
   PageHome({Key key}) : super(key: key);
@@ -16,6 +21,7 @@ class PageHome extends StatefulWidget {
 
 class _PageHomeState extends State<PageHome> {
   int _activeIndex = 0;
+  ProviderUserInfo __userinfo;
   PageController _pageController = PageController();
   List<Widget> _pageList = [TabIndex(), TabData(), TabComm(), TabMy()];
 
@@ -34,13 +40,61 @@ class _PageHomeState extends State<PageHome> {
     });
   }
 
+  // 获取用户状态并判断
+  void _getUserStatus() {
+    apiUserStatus().then((status) async {
+      this.__userinfo.upData(status.data['data']);
+      if (this.__userinfo.userinfo['status'].toString() == '1') {
+        final status = num.parse(this.__userinfo.userinfo['cert_status'].toString());
+        if (status == 0) {
+          await Ycn.modalImg(context, 'lib/images/home/modal/auth.png', Ycn.px(575), Ycn.px(696), back: false);
+          Navigator.of(context).pushNamedAndRemoveUntil('/auth-identity', (Route<dynamic> route) => false);
+        } else if (status > 0 && status < 6) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/auth-progress', (Route<dynamic> route) => false);
+        } else if (status == 6) {
+          this._getUserInfo();
+        }
+      } else if (this.__userinfo.userinfo['status'].toString() == '0') {
+        await Ycn.modal(context, content: ['该账号状态异常，登陆失败'], back: false, cancel: false);
+        Storage.del('token');
+        Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
+    });
+  }
+
+  // 获取用户信息并判断
+  void _getUserInfo() {
+    apiUserInfo().then((status) async {
+      this.__userinfo.upData(status.data['data']);
+      if (num.parse(this.__userinfo.userinfo['level_change'].toString()) == 1) {
+        if (this.__userinfo.userinfo['level'] == '顶级代理') {
+          await Ycn.modalImg(context, 'lib/images/home/modal/upToTop.png', Ycn.px(576), Ycn.px(676), back: false);
+        } else if (this.__userinfo.userinfo['level'] == '皇冠代理') {
+          await Ycn.modalImg(context, 'lib/images/home/modal/upToCrown.png', Ycn.px(576), Ycn.px(676), back: false);
+        }
+      } else if (num.parse(this.__userinfo.userinfo['level_change'].toString()) == -1) {
+        if (this.__userinfo.userinfo['level'] == '顶级代理') {
+          await Ycn.modalImg(context, 'lib/images/home/modal/downToTop.png', Ycn.px(576), Ycn.px(676), back: false);
+        } else if (this.__userinfo.userinfo['level'] == '特级代理') {
+          await Ycn.modalImg(context, 'lib/images/home/modal/downToSuper.png', Ycn.px(576), Ycn.px(676), back: false);
+        }
+      }
+      await apiComfirmLevel();
+      this._appUpdata();
+    });
+  }
+
+  // app 检查更新
+  void _appUpdata() {
+    apiAppUpdata().then((status) {
+      print(status.data['data']);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    apiUserStatus().then((status) {
-      final res1 = status.data;
-      print(res1['data']);
-    });
+    this._getUserStatus();
   }
 
   @override
@@ -56,48 +110,51 @@ class _PageHomeState extends State<PageHome> {
 
     // 监听 token 失效跳转
     EventBus().on('LOGIN', (arg) {
-      Navigator.of(context).popUntil(ModalRoute.withName('/'));
-      Navigator.of(context).pushReplacementNamed('/login');
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     });
 
-    return Scaffold(
-      body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
-      bottomNavigationBar: Container(
-        height: Ycn.px(97),
-        decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Color.fromRGBO(178, 178, 178, 0.1)))),
-        child: Row(
-          children: <Widget>[
-            ...this
-                ._tabList
-                .map(
-                  (item) => Expanded(
-                    child: Material(
-                      color: Colors.white,
-                      child: InkWell(
-                        onTap: () => this._switchTab(this._tabList.indexOf(item)),
-                        child: this._tabList.indexOf(item) == 3
-                            ? Stack(
-                                children: <Widget>[
-                                  Positioned.fill(
-                                    child: CustomBottomNavigationBarItem(
-                                        item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
-                                  ),
-                                  Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: 999)),
-                                ],
-                              )
-                            : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+    return Consumer(builder: (BuildContext context, ProviderUserInfo userinfo, Widget child) {
+      this.__userinfo = userinfo;
+      return Scaffold(
+        body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
+        bottomNavigationBar: Container(
+          height: Ycn.px(97),
+          decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Color.fromRGBO(178, 178, 178, 0.1)))),
+          child: Row(
+            children: <Widget>[
+              ...this
+                  ._tabList
+                  .map(
+                    (item) => Expanded(
+                      child: Material(
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: () => this._switchTab(this._tabList.indexOf(item)),
+                          child: this._tabList.indexOf(item) == 3
+                              ? Stack(
+                                  children: <Widget>[
+                                    Positioned.fill(
+                                      child: CustomBottomNavigationBarItem(
+                                          item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+                                    ),
+                                    Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: 999)),
+                                  ],
+                                )
+                              : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
-          ],
+                  )
+                  .toList(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
+// 自定义底部导航栏
 class CustomBottomNavigationBarItem extends StatelessWidget {
   final item, index, activeIndex;
   const CustomBottomNavigationBarItem({Key key, this.item, this.index, this.activeIndex}) : super(key: key);

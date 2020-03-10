@@ -1,3 +1,4 @@
+import '../pages/AllIcon/AllIcon.dart';
 import 'package:flutter/material.dart';
 import '../pages/PageHome/PageHome.dart';
 import '../pages/PageLogin/PageLogin.dart';
@@ -12,9 +13,12 @@ import '../pages/PageChooseSize/PageChooseSize.dart';
 import '../pages/PageGoodDetail/PageGoodDetail.dart';
 import '../pages/PageManageTeam/PageManageTeam.dart';
 import '../pages/PageManageOrder/PageManageOrder.dart';
+import '../pages/PageAuthIdentity/PageAuthIdentity.dart';
+import '../pages/PageAuthProgress/PageAuthProgress.dart';
 import '../pages/PageManageFortune/PageManageFortune.dart';
 
 Map routes = <String, WidgetBuilder>{
+  '/icon': (ctx) => AllIcon(), // 图标
   '/home': (ctx) => PageHome(), // app 首页
   '/test': (ctx) => Developing(), // 开发中页面
   '/login': (ctx) => PageLogin(), // 登陆注册页面
@@ -28,5 +32,7 @@ Map routes = <String, WidgetBuilder>{
   '/good-detail': (ctx) => PageGoodDetail(), // 商品详情页面
   '/choose-size': (ctx) => PageChooseSize(), // 选择尺寸页面
   '/manage-order': (ctx) => PageManageOrder(), // 订货管理页面
+  '/auth-identity': (ctx) => PageAuthIdentity(), // 身份认证页面
+  '/auth-progress': (ctx) => PageAuthProgress(), // 审核进度页面页面
   '/manage-fortune': (ctx) => PageManageFortune(), // 财富管理页面
 };

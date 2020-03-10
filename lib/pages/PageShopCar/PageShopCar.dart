@@ -25,14 +25,7 @@ class _PageShopCarState extends State<PageShopCar> {
 
   // 从购物车删除商品
   Future _delGood(goodIndex) async {
-    if (await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => CustomModal(
-            content: ['确定将', this.__shopCar.shopCar[goodIndex]['name'], '从购物车删除?'],
-          ),
-        ) !=
-        null) {
+    if (await Ycn.modal(context, content: ['确定将',  this.__shopCar.shopCar[goodIndex]['name'], '从购物车删除?']) != null) {
       this.__shopCar.delGood(goodIndex);
       setState(() {
         this.__shopCar.totalNum == 0 ? this._isDelMode = false : '';
@@ -44,14 +37,7 @@ class _PageShopCarState extends State<PageShopCar> {
   void _comfirm() async {
     if (this._isDelMode) {
       if (this.__shopCar.totalChoosedNum > 0) {
-        if (await showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) => CustomModal(
-                content: ['确定将这${this.__shopCar.totalChoosedNum}件商品从购物车删除?'],
-              ),
-            ) !=
-            null) {
+        if (await await Ycn.modal(context, content: ['确定将这${this.__shopCar.totalChoosedNum}件商品从购物车删除?']) != null) {
           this.__shopCar.delChoosed();
           setState(() {
             this.__shopCar.totalNum == 0 ? this._isDelMode = false : '';
@@ -62,7 +48,6 @@ class _PageShopCarState extends State<PageShopCar> {
       }
     } else {
       if (this.__shopCar.totalNum > 0) {
-
       } else {
         Ycn.toast('购物车中还没有商品呢');
       }

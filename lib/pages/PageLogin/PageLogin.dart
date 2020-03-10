@@ -113,16 +113,19 @@ class _PageLoginState extends State<PageLogin> {
       setState(() {
         this._loading = true;
       });
-      apiLoginByCode({'mobile': this._textEditingController1.text, 'verify_code': this._textEditingController2.text}).then((status) async {
-        final res = status.data;
-        await Storage.setter('token', res['data']['token']);
-        Navigator.of(context).pushReplacementNamed('/home');
-      }).whenComplete(() {
-        setState(() {
-          this._loading = false;
-          this._requesting = false;
+      if (!this._requesting) {
+        this._requesting = true;
+        apiLoginByCode({'mobile': this._textEditingController1.text, 'verify_code': this._textEditingController2.text}).then((status) async {
+          final res = status.data;
+          await Storage.setter('token', res['data']['token']);
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+        }).whenComplete(() {
+          setState(() {
+            this._loading = false;
+            this._requesting = false;
+          });
         });
-      });
+      }
     }
   }
 

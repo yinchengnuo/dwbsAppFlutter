@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'components.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,19 +21,13 @@ class Ycn {
   static appBar(context, {back: true, title: '', action: false, transparent: false}) => PreferredSize(
         preferredSize: Size.fromHeight(Ycn.px(86)),
         child: AppBar(
-          title: Text(title),
+          title: GestureDetector(onLongPress: () => Navigator.of(context).pushNamed('/icon'), child: Text(title)),
           centerTitle: true,
           brightness: Brightness.light,
           automaticallyImplyLeading: false,
           elevation: transparent == false ? px(1) : 0,
           backgroundColor: transparent == false ? Colors.white : Colors.transparent,
-          leading: back
-              ? IconButton(
-                  icon: Icon(Icons.arrow_back_ios, size: Ycn.px(40)),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  })
-              : null,
+          leading: back ? IconButton(icon: Icon(Icons.arrow_back_ios, size: Ycn.px(40)), onPressed: () => Navigator.of(context).pop()) : null,
           actions: action == false ? <Widget>[] : <Widget>[action],
         ),
       );
@@ -85,4 +80,27 @@ class Ycn {
 
   // 克隆
   static clone(map) => jsonDecode(jsonEncode(map));
+
+  // modal 方法
+  static modal(context, {title, content, cancel, inputNum, back = true}) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: !back,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async => back,
+        child: CustomModal(title: title, content: content, cancel: cancel, inputNum: inputNum),
+      ),
+    );
+  }
+
+  static modalImg(context, img, width, height, {back = true}) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: !back,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async => back,
+        child: CustomModal(img: img, width: width, height: height),
+      ),
+    );
+  }
 }

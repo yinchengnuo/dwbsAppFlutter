@@ -96,7 +96,14 @@ flutter:
     - lib/images/public/empty-shopcar.png
     - lib/images/public/login.png
     - lib/images/public/wx-login.png
-
+    - lib/images/home/modal/auth.png
+    - lib/images/home/modal/downToSuper.png
+    - lib/images/home/modal/downToTop.png
+    - lib/images/home/modal/updata.png
+    - lib/images/home/modal/upToCrown.png
+    - lib/images/home/modal/upToTop.png
+    - lib/images/public/auth-progress.png
+    
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

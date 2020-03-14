@@ -20,6 +20,7 @@ class DataTitle extends StatelessWidget {
             width: Ycn.px(146),
             height: double.infinity,
             child: Material(
+              color: Colors.white,
               child: InkWell(
                 onTap: this.handle,
                 child: Row(

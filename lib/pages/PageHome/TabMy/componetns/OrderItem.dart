@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import '../../../../common/Ycn.dart';
+import 'package:flutter/material.dart';
+import '../../../../common/Storage.dart';
 
 class OrderItem extends StatelessWidget {
-  final onum, title, route, arguments;
-  const OrderItem({Key key, this.onum, this.title, this.route, this.arguments}) : super(key: key);
+  final onum, title, route, type;
+  const OrderItem({Key key, this.onum, this.title, this.route, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,10 @@ class OrderItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => Navigator.of(context).pushNamed(this.route, arguments: this.arguments),
+          onTap: () {
+            Storage.setter('ORDERTYPE', this.type.toString());
+            Navigator.of(context).pushNamed(this.route);
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

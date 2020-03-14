@@ -1,6 +1,7 @@
 
-import 'common/Ycn.dart'; // 引入工具库
-import 'common/dio.dart'; // 引入 dio 单例
+import 'common/Ycn.dart';
+import 'common/dio.dart';
+import 'common/Storage.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,19 +11,20 @@ import 'router/onUnknownRoute.dart';
 import 'router/onGenerateRoute.dart';
 import 'router/navigatorObservers.dart';
 import 'package:fluwx/fluwx.dart' as fluwx;
-import 'package:flutter_localizations/flutter_localizations.dart'; // 语言包
 
-import 'common/Storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:provider/provider.dart'; // 引入 provider
 import 'provider/ProviderComm.dart'; // 社区相关状态
+import 'provider/ProviderAddress.dart'; // 地址状态
 import 'provider/ProviderShopCar.dart'; // 购物车相关状态
+import 'provider/ProviderMessage.dart'; // 消息通知状态
+import 'provider/ProviderUserInfo.dart'; // 用户信息状态
+import 'package:provider/provider.dart'; // 引入 provider
 import 'provider/ProviderChoosedSize.dart'; // 已选中商品相关状态
-import 'provider/ProviderUserInfo.dart'; // 用户信心状态
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
 import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; // 语言包
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,9 +60,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.2.110/dwbsapp'; // 配置 baseUrl
-    dio.options.baseUrl = 'http://192.168.0.101/dwbsapp'; // 配置 baseUrl
+    dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
+    // dio.options.baseUrl = 'http://192.168.2.105/dwbsapp'; // 配置 baseUrl
+    // dio.options.baseUrl = 'http://192.168.0.102/dwbsapp'; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
     // this._initWx(); // 初始化微信
@@ -71,7 +73,9 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderComm()),
+        ChangeNotifierProvider(create: (_) => ProviderMessage()),
         ChangeNotifierProvider(create: (_) => ProviderShopCar()),
+        ChangeNotifierProvider(create: (_) => ProviderAddress()),
         ChangeNotifierProvider(create: (_) => ProviderUserInfo()),
         ChangeNotifierProvider(create: (_) => ProviderChoosedSize()),
       ],

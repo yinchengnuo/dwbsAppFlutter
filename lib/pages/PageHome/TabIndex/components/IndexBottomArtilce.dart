@@ -7,7 +7,6 @@ class IndexBottomArtilce extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List formateTimes = Ycn.formatTime(articleInfo['created_at']);
     return Container(
       height: Ycn.px(346),
       margin: EdgeInsets.only(bottom: Ycn.px(12)),
@@ -77,7 +76,7 @@ class IndexBottomArtilce extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      '${formateTimes[0]}-${formateTimes[1]}-${formateTimes[3]}  ${formateTimes[4]}:${formateTimes[5]}',
+                                      '${Ycn.formatTime(articleInfo['created_at'])}',
                                       style: TextStyle(color: Theme.of(context).textTheme.display1.color, fontSize: Ycn.px(24)),
                                     ),
                                     Text(

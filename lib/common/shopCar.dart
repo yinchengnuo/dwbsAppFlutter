@@ -14,7 +14,7 @@ Map beforeAddToShopCar(goodItem, typeList) {
 }
 
 // 清除购物车中数量为 0 的 尺寸 类型 商品
-void clearShopCarListNumZero(shopCar) {
+List clearShopCarListNumZero(shopCar) {
   for (int a = shopCar.length - 1; a >= 0; a--) {
     final goodItem = shopCar[a];
     for (int b = goodItem['typeList'].length - 1; b >= 0; b--) {
@@ -31,4 +31,5 @@ void clearShopCarListNumZero(shopCar) {
     }
     goodItem['typeList'].length == 0 ? shopCar.removeAt(a) : '';
   }
+  return shopCar;
 }

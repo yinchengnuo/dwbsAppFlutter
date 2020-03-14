@@ -25,7 +25,7 @@ class _PageShopCarState extends State<PageShopCar> {
 
   // 从购物车删除商品
   Future _delGood(goodIndex) async {
-    if (await Ycn.modal(context, content: ['确定将',  this.__shopCar.shopCar[goodIndex]['name'], '从购物车删除?']) != null) {
+    if (await Ycn.modal(context, content: ['确定将', this.__shopCar.shopCar[goodIndex]['name'], '从购物车删除?']) != null) {
       this.__shopCar.delGood(goodIndex);
       setState(() {
         this.__shopCar.totalNum == 0 ? this._isDelMode = false : '';
@@ -48,6 +48,10 @@ class _PageShopCarState extends State<PageShopCar> {
       }
     } else {
       if (this.__shopCar.totalNum > 0) {
+        Navigator.of(context).pushNamed('/confirm-order', arguments: {
+          'from': 'shopCar',
+          'goodLsit': Ycn.clone(this.__shopCar.shopCarChoosed),
+        });
       } else {
         Ycn.toast('购物车中还没有商品呢');
       }

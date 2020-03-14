@@ -1,4 +1,3 @@
-
 import 'TabMy/TabMy.dart';
 import '../../apis/app.dart';
 import 'TabComm/TabComm.dart';
@@ -11,7 +10,9 @@ import '../../common/EventBus.dart';
 import '../../common/components.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../provider/ProviderMessage.dart';
 import '../../provider/ProviderUserInfo.dart';
+import 'package:package_info/package_info.dart';
 
 class PageHome extends StatefulWidget {
   PageHome({Key key}) : super(key: key);
@@ -21,6 +22,7 @@ class PageHome extends StatefulWidget {
 
 class _PageHomeState extends State<PageHome> {
   int _activeIndex = 0;
+  ProviderMessage __message;
   ProviderUserInfo __userinfo;
   PageController _pageController = PageController();
   List<Widget> _pageList = [TabIndex(), TabData(), TabComm(), TabMy()];
@@ -64,6 +66,7 @@ class _PageHomeState extends State<PageHome> {
 
   // 获取用户信息并判断
   void _getUserInfo() {
+    this.__message.getMessage(); // 获取用户消息通知
     apiUserInfo().then((status) async {
       this.__userinfo.upData(status.data['data']);
       if (num.parse(this.__userinfo.userinfo['level_change'].toString()) == 1) {
@@ -79,15 +82,22 @@ class _PageHomeState extends State<PageHome> {
           await Ycn.modalImg(context, 'lib/images/home/modal/downToSuper.png', Ycn.px(576), Ycn.px(676), back: false);
         }
       }
-      await apiComfirmLevel();
+      apiComfirmLevel(); // 用户确认等级变动
       this._appUpdata();
     });
   }
 
   // app 检查更新
   void _appUpdata() {
-    apiAppUpdata().then((status) {
-      print(status.data['data']);
+    apiAppUpdata().then((status) async {
+      if ((await PackageInfo.fromPlatform()).version != status.data['data']['version']) {
+        Ycn.modalUpdata(context, status.data['data']['version'], status.data['data']['message']).then((res) {
+          if (res != null) {
+            print(status.data['data']['url']);
+            Ycn.toast('新版本开始下载...');
+          }
+        });
+      }
     });
   }
 
@@ -113,7 +123,8 @@ class _PageHomeState extends State<PageHome> {
       Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     });
 
-    return Consumer(builder: (BuildContext context, ProviderUserInfo userinfo, Widget child) {
+    return Consumer2(builder: (BuildContext context, ProviderUserInfo userinfo, ProviderMessage message, Widget child) {
+      this.__message = message;
       this.__userinfo = userinfo;
       return Scaffold(
         body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
@@ -137,7 +148,7 @@ class _PageHomeState extends State<PageHome> {
                                       child: CustomBottomNavigationBarItem(
                                           item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
                                     ),
-                                    Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: 999)),
+                                    Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: this.__message.totalMessageNum)),
                                   ],
                                 )
                               : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),

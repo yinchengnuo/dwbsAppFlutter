@@ -13,7 +13,7 @@ class CustomInterceptors extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    print('拦截器 worked');
+    print('拦截器');
     if (response.data['code'] == 401) {
       EventBus().emit('LOGIN');
     }

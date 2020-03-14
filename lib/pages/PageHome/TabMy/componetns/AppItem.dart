@@ -3,8 +3,8 @@ import '../../../../common/Ycn.dart';
 import '.././../../../common/components.dart';
 
 class AppItem extends StatelessWidget {
-  final img, title, route, msg;
-  const AppItem({Key key, this.img, this.title, this.route, this.msg = false}) : super(key: key);
+  final img, title, route, number;
+  const AppItem({Key key, this.img, this.title, this.route, this.number = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,7 @@ class AppItem extends StatelessWidget {
                 ),
                 Row(
                   children: <Widget>[
-                    this.msg == false
-                        ?Container(width: 0, height: 0)
-                        : RedDot(number: 999),
+                    RedDot(number: this.number),
                     SizedBox(width: Ycn.px(12)),
                     Icon(Icons.arrow_forward_ios, size: Ycn.px(29), color: Ycn.getColor('#B7B7B7'))
                   ],

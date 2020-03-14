@@ -7,6 +7,8 @@ class Storage {
   static getter(key) {
     if (prefs.getString(key) == null) {
       return '';
+    } else if (prefs.getString(key) == '') {
+      return '';
     } else if (prefs.getString(key)[0] == '[' || prefs.getString(key)[0] == '{') {
       return jsonDecode(prefs.getString(key));
     } else {

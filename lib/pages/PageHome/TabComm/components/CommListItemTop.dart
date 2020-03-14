@@ -27,7 +27,7 @@ class CommListItemTop extends StatelessWidget {
               ),
             ],
           ),
-          Text(data['created_at'])
+          Text(Ycn.formatTime(data['created_at']), style: TextStyle(fontSize: Ycn.px(24)))
         ],
       ),
     );

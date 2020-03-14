@@ -6,10 +6,7 @@ class AllIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('各种 icon'),
-      ),
+      appBar: AppBar(centerTitle: true, title: Text('各种 icon')),
       body: Builder(
         builder: (BuildContext context) {
           return GridView.builder(

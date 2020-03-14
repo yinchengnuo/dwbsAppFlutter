@@ -1,10 +1,8 @@
+import '../../../apis/comm.dart';
+import '../../../common/Ycn.dart';
 import 'package:flutter/material.dart';
-import '../../../common/Ycn.dart'; // 引入工具库
-import '../../../apis/comm.dart'; // 引入接口
-
+import 'package:provider/provider.dart';
 import '../../../provider/ProviderComm.dart';
-import 'package:provider/provider.dart'; // 引入 provider
-
 import 'components/CommListItemWrapper.dart';
 
 class TabComm extends StatefulWidget {
@@ -22,11 +20,10 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
     'page': [1, 1, 1, 1],
     'data': [[], [], [], []],
     'requesting': [false, false, false, false],
+    'navs': ['热门推荐', '最新更新', '常来微聊', '我的收藏'],
     'apis': [apiCommListRemen, apiCommListZuixin, apiCommListChanglai, apiCommListShoucang],
     'controllers': [ScrollController(), ScrollController(), ScrollController(), ScrollController()],
   };
-
-  ScrollController _scrollController;
 
   // 发送网络请求
   Future _request() async {
@@ -67,7 +64,7 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
   @override
   void initState() {
     super.initState();
-    this._tabController = TabController(length: 4, vsync: this);
+    this._tabController = TabController(length: this._pageData['navs'].length, vsync: this);
 
     // 左右拖动改变 tabIndex
     this._tabController.addListener(() {
@@ -105,7 +102,7 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
                     controller: this._tabController,
                     indicatorWeight: Ycn.px(6),
                     indicatorPadding: EdgeInsets.fromLTRB(Ycn.px(14), 0, Ycn.px(14), 0),
-                    tabs: [Tab(text: '热门推荐'), Tab(text: '最新更新'), Tab(text: '常来微聊'), Tab(text: '我的收藏')],
+                    tabs: [...this._pageData['navs'].map((nav) => Tab(text: nav)).toList()],
                   ),
                 ),
               ),
@@ -113,31 +110,34 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
                 child: TabBarView(
                   controller: this._tabController,
                   physics: ClampingScrollPhysics(),
-                  children: this
-                      .__comm
-                      .commList
-                      .map(
-                        (item) => this._pageData['page'][this.__comm.commList.indexOf(item)] == 1 &&
-                                this._pageData['requesting'][this.__comm.commList.indexOf(item)] &&
-                                this.__comm.commList[this.__comm.commList.indexOf(item)].length == 0
-                            ? Center(child: CircularProgressIndicator())
-                            : RefreshIndicator(
-                                onRefresh: this._pageRefresh,
-                                child: ListView.builder(
-                                  controller: this._pageData['controllers'][this.__comm.commList.indexOf(item)],
-                                  itemCount: this.__comm.commList[this.__comm.commList.indexOf(item)].length,
-                                  itemBuilder: (BuildContext context, int index) => CommListItemWrapper(
-                                    index: index,
-                                    provider: this.__comm,
-                                    type: this._pageData['index'],
-                                    page: this._pageData['page'][this.__comm.commList.indexOf(item)],
-                                    data: this.__comm.commList[this.__comm.commList.indexOf(item)][index],
-                                    last: index == this.__comm.commList[this.__comm.commList.indexOf(item)].length - 1,
-                                  ),
-                                ),
-                              ),
-                      )
-                      .toList(),
+                  children: this.__comm.commList.map(
+                    (item) {
+                      if (this._pageData['page'][this.__comm.commList.indexOf(item)] == 1 &&
+                          this._pageData['requesting'][this.__comm.commList.indexOf(item)] &&
+                          this.__comm.commList[this.__comm.commList.indexOf(item)].length == 0) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (this._pageData['page'][this.__comm.commList.indexOf(item)] == 0 &&
+                          this.__comm.commList[this.__comm.commList.indexOf(item)].length == 0) {
+                        return Center(child: Text('空空如也...'));
+                      } else {
+                        return RefreshIndicator(
+                          onRefresh: this._pageRefresh,
+                          child: ListView.builder(
+                            controller: this._pageData['controllers'][this.__comm.commList.indexOf(item)],
+                            itemCount: this.__comm.commList[this.__comm.commList.indexOf(item)].length,
+                            itemBuilder: (BuildContext context, int index) => CommListItemWrapper(
+                              index: index,
+                              provider: this.__comm,
+                              type: this._pageData['index'],
+                              page: this._pageData['page'][this.__comm.commList.indexOf(item)],
+                              data: this.__comm.commList[this.__comm.commList.indexOf(item)][index],
+                              last: index == this.__comm.commList[this.__comm.commList.indexOf(item)].length - 1,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ).toList(),
                 ),
               )
             ],

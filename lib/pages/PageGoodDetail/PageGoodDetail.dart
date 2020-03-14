@@ -1,14 +1,12 @@
 import '../../apis/good.dart';
 import '../../common/Ycn.dart';
+import '../../common/shopCar.dart';
 import '../../common/components.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-
-import '../../provider/ProviderChoosedSize.dart';
+import 'package:provider/provider.dart';
 import '../../provider/ProviderShopCar.dart';
-import 'package:provider/provider.dart'; // 引入 provider
-
-import '../../common/shopCar.dart';
+import '../../provider/ProviderChoosedSize.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class PageGoodDetail extends StatefulWidget {
   PageGoodDetail({Key key}) : super(key: key);
@@ -47,6 +45,10 @@ class _PageGoodDetailState extends State<PageGoodDetail> {
   // 点击立即购买
   void _buy() {
     if (this.__choosedSize.choosedTotal > 0) {
+      Navigator.of(context).pushNamed('/confirm-order', arguments: {
+        'from': 'detail',
+        'goodLsit': clearShopCarListNumZero([beforeAddToShopCar(Ycn.clone(this._data), Ycn.clone(this.__choosedSize.choosedList))]),
+      });
     } else {
       Ycn.toast('还没有选择尺寸');
     }

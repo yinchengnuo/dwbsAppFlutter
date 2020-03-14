@@ -183,6 +183,63 @@ class CustomModal extends Dialog {
   }
 }
 
+// app 升级弹窗
+class UpdataModal extends StatelessWidget {
+  final version, message;
+  const UpdataModal({Key key, this.version = '', this.message = ''}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pop({}),
+        child: Container(
+          width: Ycn.px(560),
+          height: Ycn.px(681),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(child: Image.asset('lib/images/home/modal/updata.png')),
+              Positioned(
+                top: Ycn.px(321),
+                left: Ycn.px(45),
+                right: Ycn.px(45),
+                bottom: Ycn.px(128),
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '版本号：${this.version}',
+                        style: TextStyle(
+                          fontSize: Ycn.px(32),
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none,
+                          color: Theme.of(context).textTheme.body1.color,
+                        ),
+                      ),
+                      Text(
+                        '更新说明：${this.message}',
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: Ycn.px(28),
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none,
+                          color: Theme.of(context).textTheme.body1.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // 自定义小圆点
 class RedDot extends StatelessWidget {
   final number;
@@ -244,6 +301,12 @@ class CustomCounter extends StatelessWidget {
         } else {
           this.onChange(1);
           Ycn.toast('数量不能再减少了');
+        }
+        if (res['value'] <= this.max) {
+          this.onChange(res['value']);
+        } else {
+          this.onChange(this.max);
+          Ycn.toast('数量不能再增加了');
         }
       }
     });

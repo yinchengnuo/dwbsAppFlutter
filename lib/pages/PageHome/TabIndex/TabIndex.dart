@@ -69,9 +69,9 @@ class _TabIndexState extends State<TabIndex> with AutomaticKeepAliveClientMixin 
                         child: Wrap(
                           children: <Widget>[
                             IndexKingkongItem(src: 'lib/images/home/index/place-order.png', title: '订货下单', route: '/good-list'),
-                            IndexKingkongItem(src: 'lib/images/home/index/my-order.png', title: '我的订单', route: '/test'),
-                            IndexKingkongItem(src: 'lib/images/home/index/down-order.png', title: '下级订单', route: '/test'),
-                            IndexKingkongItem(src: 'lib/images/home/index/my-stock.png', title: '我的库存', route: '/test'),
+                            IndexKingkongItem(src: 'lib/images/home/index/my-order.png', title: '我的订单', route: '/my-order'),
+                            IndexKingkongItem(src: 'lib/images/home/index/down-order.png', title: '下级订单', route: '/down-order'),
+                            IndexKingkongItem(src: 'lib/images/home/index/my-stock.png', title: '我的库存', route: '/my-stock'),
                             IndexKingkongItem(src: 'lib/images/home/index/invite-proxy.png', title: '邀请代理', route: '/test'),
                             IndexKingkongItem(src: 'lib/images/home/index/register-examine.png', title: '注册审核', route: '/test'),
                             IndexKingkongItem(src: 'lib/images/home/index/my-invite.png', title: '我的邀请', route: '/test'),

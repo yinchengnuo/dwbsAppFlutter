@@ -29,7 +29,7 @@ class CommListItem extends StatelessWidget {
                       children: <Widget>[
                         CommListItemTop(data: data),
                         Text(data['title'], maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: Ycn.px(32))),
-                        Text(data['summary'], maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: Ycn.px(26))),
+                        Text(data['summary'], maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: Ycn.px(26), height: 1.5)),
                         Container(
                           height: Ycn.px(150),
                           child: Row(
@@ -46,7 +46,7 @@ class CommListItem extends StatelessWidget {
                                             shadows: [BoxShadow(blurRadius: Ycn.px(1), color: Theme.of(context).textTheme.display1.color)],
                                           ),
                                         )
-                                      :Container(width: 0, height: 0))
+                                      : Container(width: 0, height: 0))
                                   .toList()
                             ],
                           ),
@@ -122,7 +122,7 @@ class CommListItem extends StatelessWidget {
         ),
       );
     } else if (data['type'] == 2) {
-      final formatTime = Ycn.formatTime(data['created_at']);
+      final formatTime = Ycn.formatTime(data['created_at'], array: true);
       return Container(
         height: Ycn.px(422),
         margin: EdgeInsets.only(top: Ycn.px(10)),

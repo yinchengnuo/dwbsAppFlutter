@@ -33,9 +33,9 @@ class Ycn {
       );
 
   // 格式化时间
-  static List formatTime(time) {
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
-    return [
+  static formatTime(time, {array: false}) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(int.parse(time.toString()));
+    final arr = [
       date.year.toString().length == 1 ? '0${date.year.toString()}' : date.year.toString(),
       date.month.toString().length == 1 ? '0${date.month.toString()}' : date.month.toString(),
       date.weekday.toString().length == 1 ? '0${date.weekday.toString()}' : date.weekday.toString(),
@@ -43,6 +43,7 @@ class Ycn {
       date.hour.toString().length == 1 ? '0${date.hour.toString()}' : date.hour.toString(),
       date.minute.toString().length == 1 ? '0${date.minute.toString()}' : date.minute.toString()
     ];
+    return array ? arr : '${arr[0]}-${arr[1]}-${arr[3]} ${arr[4]}:${arr[5]}';
   }
 
   // 数字打点
@@ -102,5 +103,41 @@ class Ycn {
         child: CustomModal(img: img, width: width, height: height),
       ),
     );
+  }
+
+  static modalUpdata(context, version, message) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => UpdataModal(version: version, message: message),
+    );
+  }
+
+  static formatAddress(address, {split: false}) {
+    if (split) {
+      return [
+        '${address['provice'].toString()}-${address['city'].toString()}-${address['area'].toString()}',
+        '${address['address'].toString()}',
+      ];
+    } else {
+      return '${address['provice'].toString()}-${address['city'].toString()}-${address['area'].toString()}-${address['address'].toString()}';
+    }
+  }
+
+  static formatOrderStatus(status) {
+    switch (status.toString()) {
+      case '0':
+        return '待付款';
+      case '1':
+        return '待发货';
+      case '2':
+        return '待收货';
+      case '3':
+        return '已完成';
+      case '4':
+        return '已取消';
+      default:
+        return '';
+    }
   }
 }

@@ -54,14 +54,13 @@ class _PageLoginState extends State<PageLogin> {
     if (!(this._textEditingController1.text.length < 5)) {
       this._pulldownKB();
       if (this._count == 0) {
-        setState(() {
-          this._loading = true;
-        });
         if (!this._requesting) {
-          this._requesting = true;
+          setState(() {
+            this._loading = true;
+            this._requesting = true;
+          });
           apiGetPhoneCode({'mobile': this._textEditingController1.text, 'code': this._code}).then((status) {
             final res = status.data;
-            print(res['code']);
             if (res['code'] == 200) {
               setState(() {
                 this._count = this._maxCount;
@@ -109,13 +108,38 @@ class _PageLoginState extends State<PageLogin> {
       return;
     }
     if (this._isReg) {
-    } else {
-      setState(() {
-        this._loading = true;
-      });
       if (!this._requesting) {
-        this._requesting = true;
-        apiLoginByCode({'mobile': this._textEditingController1.text, 'verify_code': this._textEditingController2.text}).then((status) async {
+        setState(() {
+          this._loading = true;
+          this._requesting = true;
+        });
+        apiReg({
+          'code': this._code,
+          'mobile': this._textEditingController1.text,
+          'verify_code': this._textEditingController2.text,
+          'recom_code': this._textEditingController3.text
+        }).then((status) async {
+          final res = status.data;
+          await Storage.setter('token', res['data']['token']);
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+        }).whenComplete(() {
+          setState(() {
+            this._loading = false;
+            this._requesting = false;
+          });
+        });
+      }
+    } else {
+      if (!this._requesting) {
+        setState(() {
+          this._loading = true;
+          this._requesting = true;
+        });
+        apiLoginByCode({
+          'code': this._code,
+          'mobile': this._textEditingController1.text,
+          'verify_code': this._textEditingController2.text,
+        }).then((status) async {
           final res = status.data;
           await Storage.setter('token', res['data']['token']);
           Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
@@ -189,13 +213,13 @@ class _PageLoginState extends State<PageLogin> {
                                   keyboardType: TextInputType.number,
                                   controller: _textEditingController1,
                                   textInputAction: TextInputAction.done,
-                                  style: TextStyle(fontSize: Ycn.px(26)),
+                                  style: TextStyle(fontSize: Ycn.px(34)),
                                   cursorRadius: Radius.circular(Ycn.px(2)),
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                     hintText: '请输入手机号',
                                     border: InputBorder.none,
-                                    hintStyle: TextStyle(color: Theme.of(context).textTheme.display1.color),
+                                    hintStyle: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).textTheme.display1.color),
                                   ),
                                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(11)],
                                 ),
@@ -220,13 +244,13 @@ class _PageLoginState extends State<PageLogin> {
                                   keyboardType: TextInputType.number,
                                   controller: _textEditingController2,
                                   textInputAction: TextInputAction.done,
-                                  style: TextStyle(fontSize: Ycn.px(26)),
+                                  style: TextStyle(fontSize: Ycn.px(34)),
                                   cursorRadius: Radius.circular(Ycn.px(2)),
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                     hintText: '请输入验证码',
                                     border: InputBorder.none,
-                                    hintStyle: TextStyle(color: Theme.of(context).textTheme.display1.color),
+                                    hintStyle: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).textTheme.display1.color),
                                   ),
                                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
                                 ),
@@ -268,13 +292,13 @@ class _PageLoginState extends State<PageLogin> {
                                         keyboardType: TextInputType.visiblePassword,
                                         controller: _textEditingController3,
                                         textInputAction: TextInputAction.done,
-                                        style: TextStyle(fontSize: Ycn.px(26)),
+                                        style: TextStyle(fontSize: Ycn.px(34)),
                                         cursorRadius: Radius.circular(Ycn.px(2)),
                                         cursorColor: Theme.of(context).accentColor,
                                         decoration: InputDecoration(
                                           hintText: '请输入邀请码',
                                           border: InputBorder.none,
-                                          hintStyle: TextStyle(color: Theme.of(context).textTheme.display1.color),
+                                          hintStyle: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).textTheme.display1.color),
                                         ),
                                         inputFormatters: [LengthLimitingTextInputFormatter(6)],
                                       ),
@@ -305,7 +329,7 @@ class _PageLoginState extends State<PageLogin> {
                             SizedBox(width: Ycn.px(8)),
                             Text('我已阅读并同意', style: TextStyle(fontSize: Ycn.px(22), height: 1.2)),
                             FlatButton(
-                              onPressed: () => Ycn.toast('隐私协议'),
+                              onPressed: () => Navigator.of(context).pushNamed('/app-rules'),
                               padding: EdgeInsets.all(0),
                               child: Text(
                                 '《大卫博士会员隐私协议》',

@@ -53,6 +53,22 @@ class ProviderShopCar with ChangeNotifier {
     });
   }
 
+  // 获取购物车中已选中部分
+  List get shopCarChoosed {
+    final choosedList = Ycn.clone(this._shopCarList); // 获取购物车中已选中的商品
+    choosedList.forEach((goodItem) {
+      goodItem['typeList'].forEach((typeItem) {
+        typeItem['size'].forEach((sizeItem) {
+          if (!typeItem['choosed'][typeItem['size'].indexOf(sizeItem)]) {
+            typeItem['num'][typeItem['size'].indexOf(sizeItem)] = 0; // 将要选中的的尺寸数量改为 0
+          }
+        });
+      });
+    });
+    clearShopCarListNumZero(choosedList); // 清理购物车中数量为 0 的商品
+    return choosedList;
+  }
+
   // 改变购物车选中状态
   void chooseChange(infoList) {
     if (infoList.length == 1) {

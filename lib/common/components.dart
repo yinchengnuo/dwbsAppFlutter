@@ -178,7 +178,14 @@ class CustomModal extends Dialog {
                 ),
               ),
             )
-          : GestureDetector(onTap: () => Navigator.of(context).pop({}), child: Image.asset(this.img, width: this.width, height: this.height)),
+          : GestureDetector(
+              onTap: () => Navigator.of(context).pop({}),
+              child: Image.asset(
+                this.img,
+                width: this.width,
+                height: this.height,
+              ),
+            ),
     );
   }
 }

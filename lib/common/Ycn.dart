@@ -82,11 +82,11 @@ class Ycn {
   // 克隆
   static clone(map) => jsonDecode(jsonEncode(map));
 
-  // modal 方法
+  // modal 文字
   static modal(context, {title, content, cancel, inputNum, back = true}) async {
     return await showDialog(
       context: context,
-      barrierDismissible: !back,
+      barrierDismissible: false,
       builder: (BuildContext context) => WillPopScope(
         onWillPop: () async => back,
         child: CustomModal(title: title, content: content, cancel: cancel, inputNum: inputNum),
@@ -94,10 +94,11 @@ class Ycn {
     );
   }
 
+  // modal 图片
   static modalImg(context, img, width, height, {back = true}) async {
     return await showDialog(
       context: context,
-      barrierDismissible: !back,
+      barrierDismissible: false,
       builder: (BuildContext context) => WillPopScope(
         onWillPop: () async => back,
         child: CustomModal(img: img, width: width, height: height),
@@ -105,6 +106,7 @@ class Ycn {
     );
   }
 
+  // modal app 升级页
   static modalUpdata(context, version, message) async {
     return await showDialog(
       context: context,
@@ -113,6 +115,7 @@ class Ycn {
     );
   }
 
+  // 格式化地址
   static formatAddress(address, {split: false}) {
     if (split) {
       return [
@@ -124,6 +127,7 @@ class Ycn {
     }
   }
 
+  // 格式化订单状态
   static formatOrderStatus(status) {
     switch (status.toString()) {
       case '0':
@@ -141,3 +145,5 @@ class Ycn {
     }
   }
 }
+
+

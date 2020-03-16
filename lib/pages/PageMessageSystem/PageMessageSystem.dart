@@ -1,6 +1,7 @@
 import 'package:dwbs_app_flutter/apis/app.dart';
 import 'package:dwbs_app_flutter/common/components.dart';
 import 'package:dwbs_app_flutter/provider/ProviderMessage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/Ycn.dart';
@@ -45,17 +46,28 @@ class _PageMessageSystemState extends State<PageMessageSystem> {
         child: Scaffold(
           appBar: Ycn.appBar(context, title: '系统通知'),
           body: this.__message.systemMessageNumTotal > 0
-              ? ListView.builder(
+              ? ListView.separated(
                   padding: EdgeInsets.all(Ycn.px(30)),
                   itemCount: this.__message.systemMessageNumTotal,
+                  separatorBuilder: (BuildContext context, int index) => Container(height: Ycn.px(20)),
                   itemBuilder: (BuildContext context, int index) => ClipRRect(
-                        borderRadius: BorderRadius.circular(Ycn.px(10)),
+                    borderRadius: BorderRadius.circular(Ycn.px(10)),
+                    child: Material(
+                      color: Colors.white,
+                      child: InkWell(
+                        onTap: this.__message.systemMessages[index]['url'].toString().isEmpty
+                            ? null
+                            : () => Navigator.of(context).pushNamed('/webview', arguments: {'url': this.__message.systemMessages[index]['url']}),
                         child: Column(
                           children: <Widget>[
                             Container(
                                 height: Ycn.px(58),
-                                color: Colors.white,
                                 padding: EdgeInsets.symmetric(horizontal: Ycn.px(30)),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(width: Ycn.px(1), color: Theme.of(context).scaffoldBackgroundColor),
+                                  ),
+                                ),
                                 child: Row(
                                   children: <Widget>[
                                     Container(
@@ -68,25 +80,32 @@ class _PageMessageSystemState extends State<PageMessageSystem> {
                                   ],
                                 )),
                             Container(
-                              color: Colors.white,
                               margin: EdgeInsets.symmetric(vertical: Ycn.px(1)),
                               padding: EdgeInsets.symmetric(horizontal: Ycn.px(30), vertical: Ycn.px(8)),
-                              child: Text(this.__message.systemMessages[index]['message'], style: TextStyle(fontSize: Ycn.px(26), height: 1.75)),
-                              // child: RichText(
-                              //   text: TextSpan(text: this.__message.systemMessages[index]['message'], children: [
-                              //     TextSpan(
-                              //         text: 'bold ',
-                              //         style: TextStyle(
-                              //           fontWeight: FontWeight.bold,
-                              //         )),
-                              //   ]),
-                              // ),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: this.__message.systemMessages[index]['message'],
+                                  style: TextStyle(color: Theme.of(context).textTheme.display1.color, fontSize: Ycn.px(26)),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: this.__message.systemMessages[index]['url'].toString().isEmpty ? '' : ' 点击查看更多 >>>',
+                                      style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                        fontSize: Ycn.px(26),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             Container(
                               height: Ycn.px(41),
-                              color: Colors.white,
-                              margin: EdgeInsets.only(bottom: Ycn.px(20)),
                               padding: EdgeInsets.symmetric(horizontal: Ycn.px(30)),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(width: Ycn.px(1), color: Theme.of(context).scaffoldBackgroundColor),
+                                ),
+                              ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -97,7 +116,10 @@ class _PageMessageSystemState extends State<PageMessageSystem> {
                             ),
                           ],
                         ),
-                      ))
+                      ),
+                    ),
+                  ),
+                )
               : Center(
                   child: Text('空空如也...'),
                 ),

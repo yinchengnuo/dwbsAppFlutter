@@ -46,7 +46,7 @@ class ProviderMessage with ChangeNotifier {
   // 获取消息通知页面系统通知预览文字
   String get previewSystemMessageText {
     if (this._message['system'].length > 0) {
-      return '恭喜您！您有一份价值} 元的订单';
+      return this._message['system'][0]['message'];
     } else {
       return '暂无新消息';
     }
@@ -84,6 +84,15 @@ class ProviderMessage with ChangeNotifier {
 
   // 获取所有的系统消息
   List get systemMessages => [...this._message['system'], ...this._message['systemLOCAL']];
+
+  // 获取所有缓存的系统消息大小
+  String get messageStorageSize {
+    return '${([
+          ...this._message['systemLOCAL'],
+          ...this._message['myOrderLOCAL'],
+          ...this._message['downOrderLOCAL']
+        ].toString().length / 1024).floor()}KB';
+  }
 
   // 清除服务器未读的订单消息
   void clearUnreadOrderMessages(index) {
@@ -142,5 +151,6 @@ class ProviderMessage with ChangeNotifier {
     this._message['systemLOCAL'] = [];
     this._message['myOrderLOCAL'] = [];
     this._message['downOrderLOCAL'] = [];
+    notifyListeners();
   }
 }

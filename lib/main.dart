@@ -1,7 +1,7 @@
-
 import 'common/Ycn.dart';
 import 'common/dio.dart';
 import 'common/Storage.dart';
+import 'package:dio/dio.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +12,6 @@ import 'router/onGenerateRoute.dart';
 import 'router/navigatorObservers.dart';
 import 'package:fluwx/fluwx.dart' as fluwx;
 
-
 import 'provider/ProviderComm.dart'; // 社区相关状态
 import 'provider/ProviderAddress.dart'; // 地址状态
 import 'provider/ProviderShopCar.dart'; // 购物车相关状态
@@ -21,6 +20,7 @@ import 'provider/ProviderUserInfo.dart'; // 用户信息状态
 import 'package:provider/provider.dart'; // 引入 provider
 import 'provider/ProviderChoosedSize.dart'; // 已选中商品相关状态
 
+import 'package:dwbs_app_flutter/pages/PageAD/PageAD.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
 import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
@@ -28,8 +28,22 @@ import 'package:flutter_localizations/flutter_localizations.dart'; // 语言包
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
+  prefs = await SharedPreferences.getInstance(); // 读取缓存
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)); // 设置状态栏颜色为透明
+  if (Storage.getter('AD').toString().isEmpty) {
+    try {
+      await Storage.setter(
+        'AD',
+        (await Dio().get('https://api.jiuweiyun.cn/public/uploads/images/topics/420.jpg',
+                options: Options(
+                  sendTimeout: 3000,
+                  receiveTimeout: 3000,
+                  responseType: ResponseType.bytes,
+                )))
+            .data,
+      );
+    } catch (e) {}
+  }
   runApp(MyApp());
 }
 
@@ -61,7 +75,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.2.105/dwbsapp'; // 配置 baseUrl
+    // dio.options.baseUrl = 'http://192.168.2.106/dwbsapp'; // 配置 baseUrl
     // dio.options.baseUrl = 'http://192.168.0.102/dwbsapp'; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
@@ -111,13 +125,14 @@ class _MyAppState extends State<MyApp> {
             ),
             pageTransitionsTheme: PageTransitionsTheme(
               builders: <TargetPlatform, PageTransitionsBuilder>{
-                TargetPlatform.iOS: MyPageTransitionsBuilder(),
-                TargetPlatform.android: MyPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
               },
             ),
           ),
           routes: routes,
-          home: Storage.getter('token').toString().isEmpty ? PageLogin() : PageHome(),
+          // home: Storage.getter('token').toString().isEmpty ? PageLogin() : PageHome(),
+          home: Storage.getter('token').toString().isEmpty ? PageLogin() : PageAD(),
           onUnknownRoute: onUnknownRoute, // 未知路由处理方法
           onGenerateRoute: onGenerateRoute, // 全局路由守卫，用于使用命名路由时传参
           navigatorObservers: navigatorObservers, // 应用 Navigator 的监听器
@@ -130,10 +145,11 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-// 自定义全局路由动画
-class MyPageTransitionsBuilder extends PageTransitionsBuilder {
-  @override
-  Widget buildTransitions<T>(route, context, animation, secondaryAnimation, child) {
-    return ScaleTransition(scale: animation, child: RotationTransition(turns: animation, child: child));
-  }
-}
+// // 自定义全局路由动画
+// class MyPageTransitionsBuilder extends PageTransitionsBuilder {
+//   @override
+//   Widget buildTransitions<T>(route, context, animation, secondaryAnimation, child) {
+//     // return ScaleTransition(scale: animation, child: RotationTransition(turns: animation, child: child));
+//     // return ScaleTransition(scale: animation, child: child);
+//   }
+// }

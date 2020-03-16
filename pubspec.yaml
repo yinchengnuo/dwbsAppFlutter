@@ -31,6 +31,8 @@ dependencies:
   shared_preferences: ^0.5.6+2
   package_info: ^0.4.0+14
   city_pickers: ^0.1.30
+  image_gallery_saver: ^1.2.2
+  photo_view: ^0.9.2
   # vibration: ^1.2.4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -111,6 +113,7 @@ flutter:
     - lib/images/public/system-msg.png
     - lib/images/public/pass.png
     - lib/images/public/nopass.png
+    - lib/images/public/auth-card.jpg
     
   # To add assets to your application, add an assets section, like this:
   # assets:

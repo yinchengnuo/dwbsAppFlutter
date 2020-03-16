@@ -9,3 +9,5 @@ Future apiSubmitAuth(data) => dio.get('/user/submit_user', queryParameters: data
 Future apiComfirmAuth() => dio.get('/user/user_cert'); // 用户确认审核通过
 
 Future apiComfirmLevel() => dio.get('/user/confirm_level'); // 用户确认等级变动
+
+Future apiGetAuthCard(data) => dio.get('/user/auth_code', queryParameters: data); // 获取用户授权书

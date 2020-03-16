@@ -3,8 +3,8 @@ import '../../../../common/Ycn.dart';
 import '.././../../../common/components.dart';
 
 class AppItem extends StatelessWidget {
-  final img, title, route, number;
-  const AppItem({Key key, this.img, this.title, this.route, this.number = 0}) : super(key: key);
+  final img, title, route, number, arguments;
+  const AppItem({Key key, this.img, this.title, this.route, this.number = 0, this.arguments}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class AppItem extends StatelessWidget {
       child: Material(
         color: Colors.white,
         child: InkWell(
-          onTap: () => Navigator.of(context).pushNamed(route),
+          onTap: () => Navigator.of(context).pushNamed(route, arguments: this.arguments == null ? {} : this.arguments),
           child: Container(
             padding: EdgeInsets.fromLTRB(Ycn.px(30), Ycn.px(0), Ycn.px(30), Ycn.px(0)),
             child: Row(

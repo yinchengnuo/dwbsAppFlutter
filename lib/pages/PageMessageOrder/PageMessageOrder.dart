@@ -331,13 +331,15 @@ class _PageMessageOrderState extends State<PageMessageOrder> with SingleTickerPr
                                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
-                                                          Text('订单金额：￥${orderItem['price']}'),
+                                                          Text('订单金额：￥${orderItem['price']}', style: TextStyle(fontSize: Ycn.px(26))),
                                                           Text(
                                                             '下单用户：${orderItem['nickname']}（${orderItem['phone']}）',
                                                             maxLines: 1,
                                                             overflow: TextOverflow.ellipsis,
+                                                            style: TextStyle(fontSize: Ycn.px(26)),
                                                           ),
-                                                          Text('下单时间：${Ycn.formatTime(orderItem['time'])}'),
+                                                          Text('下单时间：${Ycn.formatTime(orderItem['time'])}',
+                                                              style: TextStyle(fontSize: Ycn.px(26))),
                                                         ],
                                                       ),
                                                     ),

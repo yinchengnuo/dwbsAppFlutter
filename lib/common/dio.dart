@@ -1,3 +1,5 @@
+import 'package:dwbs_app_flutter/common/Ycn.dart';
+
 import 'Storage.dart';
 import 'package:dio/dio.dart';
 import '../common/EventBus.dart';
@@ -24,6 +26,8 @@ class CustomInterceptors extends InterceptorsWrapper {
   Future onError(DioError error) {
     if (error.toString().indexOf('404') != -1) {
       EventBus().emit('LOGIN');
+    } else {
+      Ycn.toast('网络好像出了点问题...');
     }
     return super.onError(error);
   }

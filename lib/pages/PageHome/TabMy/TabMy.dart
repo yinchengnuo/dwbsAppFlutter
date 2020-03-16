@@ -1,4 +1,5 @@
 import 'package:dwbs_app_flutter/provider/ProviderMessage.dart';
+import 'package:dwbs_app_flutter/provider/ProviderUserInfo.dart';
 import 'package:provider/provider.dart';
 
 import 'componetns/AppItem.dart';
@@ -17,9 +18,11 @@ class TabMy extends StatefulWidget {
 
 class _TabMyState extends State<TabMy> {
   ProviderMessage __message;
+  ProviderUserInfo __userinfo;
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (BuildContext context, ProviderMessage message, Widget child) {
+    return Consumer2(builder: (BuildContext context, ProviderUserInfo userinfo, ProviderMessage message, Widget child) {
+      this.__userinfo = userinfo;
       this.__message = message;
       return Scaffold(
         body: SingleChildScrollView(
@@ -93,13 +96,11 @@ class _TabMyState extends State<TabMy> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {
-                                        print('点击了个人主页');
-                                      },
+                                      onTap: () => Ycn.toast('点击了我的名片'),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
-                                          Text('个人主页', style: TextStyle(fontSize: Ycn.px(26))),
+                                          Text('我的名片', style: TextStyle(fontSize: Ycn.px(26))),
                                           SizedBox(width: Ycn.px(8)),
                                           Icon(Icons.arrow_forward_ios, size: Ycn.px(24)),
                                           SizedBox(width: Ycn.px(30))
@@ -138,10 +139,7 @@ class _TabMyState extends State<TabMy> {
                             Image.asset('lib/images/home/my/user-up.png'),
                             Material(
                               color: Colors.transparent,
-                              child: InkWell(onTap: () {
-                                print('点击了代理升级');
-                                Navigator.of(context).pushNamed('/webview', arguments: {'url': 'https://www.baidu.com'});
-                              }),
+                              child: InkWell(onTap: () => Ycn.toast('点击了代理升级')),
                             )
                           ],
                         ),
@@ -154,17 +152,23 @@ class _TabMyState extends State<TabMy> {
                 height: Ycn.px(180),
                 child: Row(
                   children: <Widget>[
-                    ActiveItem(img: 'lib/images/home/my/zhengbasai.png', title: '争霸赛', onTap: () => print('点击了争霸赛')),
-                    ActiveItem(img: 'lib/images/home/my/shalong.png', title: '线下沙龙', onTap: () => print('点击了线下沙龙')),
-                    ActiveItem(img: 'lib/images/home/my/mixun.png', title: '密训营', onTap: () => print('点击了密训营')),
+                    ActiveItem(img: 'lib/images/home/my/zhengbasai.png', title: '争霸赛', onTap: () => Ycn.toast('点击了争霸赛')),
+                    ActiveItem(img: 'lib/images/home/my/shalong.png', title: '线下沙龙', onTap: () => Ycn.toast('点击了线下沙龙')),
+                    ActiveItem(img: 'lib/images/home/my/mixun.png', title: '密训营', onTap: () => Ycn.toast('点击了密训营')),
                   ],
                 ),
               ),
               SizedBox(height: Ycn.px(10)),
-              AppItem(img: 'lib/images/home/my/message.png', title: '消息通知', route: '/message-notification', number: this.__message.totalMessageNum),
+              AppItem(
+                  img: 'lib/images/home/my/message.png', title: '消息通知', route: '/message-notification', number: this.__message.totalMessageNum),
               AppItem(img: 'lib/images/home/my/safe.png', title: '安全管理', route: '/safe-manage'),
-              AppItem(img: 'lib/images/home/my/auth.png', title: '我的授权', route: '/test'),
-              AppItem(img: 'lib/images/home/my/help.png', title: '问题帮助', route: '/test'),
+              AppItem(
+                img: 'lib/images/home/my/auth.png',
+                title: '我的授权',
+                route: '/auth-card',
+                arguments: {'id': this.__userinfo.userinfo['id']},
+              ),
+              AppItem(img: 'lib/images/home/my/help.png', title: '问题帮助', route: '/problem-help'),
               SizedBox(height: Ycn.px(10)),
               AppItem(img: 'lib/images/home/my/set.png', title: '系统设置', route: '/system-set'),
             ],

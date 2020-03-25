@@ -1,3 +1,6 @@
+import 'package:dwbs_app_flutter/common/EventBus.dart';
+import 'package:dwbs_app_flutter/common/Storage.dart';
+
 import '../../../apis/comm.dart';
 import '../../../common/Ycn.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +67,18 @@ class _TabCommState extends State<TabComm> with SingleTickerProviderStateMixin, 
   @override
   void initState() {
     super.initState();
-    this._tabController = TabController(length: this._pageData['navs'].length, vsync: this);
+    if (Storage.getter('SHOWMOREARTICLE').toString().isNotEmpty) {
+      Storage.del('SHOWMOREARTICLE');
+      this._pageData['index'] = 2;
+      this._tabController = TabController(initialIndex: 2, length: this._pageData['navs'].length, vsync: this);
+    } else {
+      this._tabController = TabController(initialIndex: 0, length: this._pageData['navs'].length, vsync: this);
+    }
+
+    EventBus().on('SHOWMOREARTICLE', (e) {
+      Storage.del('SHOWMOREARTICLE');
+      this._tabController.animateTo(2);
+    });
 
     // 左右拖动改变 tabIndex
     this._tabController.addListener(() {

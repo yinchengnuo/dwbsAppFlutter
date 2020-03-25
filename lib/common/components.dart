@@ -371,8 +371,9 @@ class CustomCounter extends StatelessWidget {
 
 // 封装过的水波纹类
 class MaterialInkWell extends StatelessWidget {
-  final onTap, onLongPress, onTapCancel, child, padding;
-  const MaterialInkWell({Key key, this.onTap, this.child, this.padding, this.onLongPress, this.onTapCancel}) : super(key: key);
+  final onTap, onLongPress, onTapCancel, child, padding, borderRadius;
+  const MaterialInkWell({Key key, this.onTap, this.child, this.padding, this.onLongPress, this.onTapCancel, this.borderRadius})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -512,17 +513,44 @@ class AppBarTextAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Ycn.px(118),
       height: double.infinity,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: this.onTap,
-          child: Center(
-            child: Text(this.text, style: TextStyle(color: Theme.of(context).accentColor, fontSize: Ycn.px(28))),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(width: Ycn.px(30)),
+              Text(this.text, style: TextStyle(color: Theme.of(context).accentColor, fontSize: Ycn.px(28))),
+              SizedBox(width: Ycn.px(30)),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class FadeRoute extends PageRouteBuilder {
+  final Widget page;
+  FadeRoute({this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
 }

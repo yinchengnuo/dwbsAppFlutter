@@ -33,6 +33,11 @@ dependencies:
   city_pickers: ^0.1.30
   image_gallery_saver: ^1.2.2
   photo_view: ^0.9.2
+  cached_network_image: ^2.0.0
+  permission_handler: ^4.4.0+hotfix.2
+  share: ^0.6.3+6
+  multi_image_picker: ^4.6.4
+  flutter_image_compress: ^0.6.5+1
   # vibration: ^1.2.4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -113,7 +118,12 @@ flutter:
     - lib/images/public/system-msg.png
     - lib/images/public/pass.png
     - lib/images/public/nopass.png
-    - lib/images/public/auth-card.jpg
+    - lib/images/public/invite-proxy.png
+    - lib/images/public/sharepyq.png
+    - lib/images/public/sharewx.png
+    - lib/images/public/top-price.png
+    - lib/images/public/super-price.png
+    - lib/images/public/updata-card.png
     
   # To add assets to your application, add an assets section, like this:
   # assets:

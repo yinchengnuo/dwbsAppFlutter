@@ -13,7 +13,7 @@ class DataTeam extends StatelessWidget {
       margin: EdgeInsets.only(bottom: Ycn.px(10)),
       child: Column(
         children: <Widget>[
-          DataTitle(data: this.data, title: '本月新增团队成员', handle: () => print('点击了 => 本月新增团队成员 => 更多')),
+          DataTitle(data: this.data, title: '本月新增团队成员', handle: () => Navigator.of(context).pushNamed('/member-manage')),
           Expanded(
             child: Container(
               color: Colors.white,
@@ -30,7 +30,7 @@ class DataTeam extends StatelessWidget {
                       children: <Widget>[
                         CircularProgressIndicator(
                           value: this.data['month_team_num'] / this.data['total_team_num'],
-                          strokeWidth: 10,
+                          strokeWidth: Ycn.px(18),
                           backgroundColor: Ycn.getColor('#FFB769'),
                         ),
                         Column(
@@ -40,7 +40,7 @@ class DataTeam extends StatelessWidget {
                             Text('${Ycn.numDot(this.data['total_team_num'])}人',
                                 style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).accentColor)),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

@@ -10,4 +10,4 @@ Future apiComfirmAuth() => dio.get('/user/user_cert'); // 用户确认审核通�
 
 Future apiComfirmLevel() => dio.get('/user/confirm_level'); // 用户确认等级变动
 
-Future apiGetAuthCard(data) => dio.get('/user/auth_code', queryParameters: data); // 获取用户授权书
+Future apiProxyUpload(data) => dio.post('/proxy/upload', data: data); // 用户升级上传截图

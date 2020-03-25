@@ -7,6 +7,7 @@ import '../../common/Ycn.dart';
 import 'package:flutter/material.dart';
 import 'package:dwbs_app_flutter/common/Storage.dart';
 import 'package:dwbs_app_flutter/common/components.dart';
+import '../../common/Storage.dart';
 
 class PageSystemSet extends StatefulWidget {
   PageSystemSet({Key key}) : super(key: key);
@@ -27,9 +28,10 @@ class _PageSystemSetState extends State<PageSystemSet> {
 
   // 点击清除缓存
   void _clearStorage(context) {
-    Ycn.modal(context, content: ['确定清除缓存的消息通知？']).then((res) {
+    Ycn.modal(context, content: ['确定清除缓存的文字和图片？']).then((res) {
       if (res != null) {
-        this.__message.clearMessageStorage();
+        this.__message.clearMessageStorage(); // 清除消息通知缓存
+        Storage.del('AD'); // 清除闪屏图片缓存
         Ycn.toast('清除成功');
       }
     });
@@ -116,7 +118,7 @@ class _PageSystemSetState extends State<PageSystemSet> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('清除缓存', style: TextStyle(fontSize: Ycn.px(32))),
-                        Text(this.__message.messageStorageSize),
+                        Text('${(this.__message.messageStorageSize + Storage.getter('AD').length / 1024).floor()}KB'),
                       ],
                     ),
                   ),

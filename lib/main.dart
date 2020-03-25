@@ -26,6 +26,12 @@ import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
 import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // 语言包
 
+const String baseURL = 'https://yinchengnuo.com/dwbsapp';
+// const String baseURL = 'http://192.168.2.106/dwbsapp';
+// const String baseURL = 'http://192.168.2.108/dwbsapp';
+// const String baseURL = 'http://192.168.43.159/dwbsapp';
+// const String baseURL = 'http://192.168.0.102/dwbsapp';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance(); // 读取缓存
@@ -60,26 +66,24 @@ class _MyAppState extends State<MyApp> {
   final Color _secondTextColor = Ycn.getColor('#666666'); // 次要要文字颜色
   final Color _thirdTextColor = Ycn.getColor('#999999'); // 最次要要文字颜色
 
-  // Future _initWx() async {
-  //   // if (await fluwx.isWeChatInstalled()) {
-  //   //   await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
-  //   //   print('初始化完成');
-  //   // } else {
-  //   //   print('微信未安装');
-  //   // }
-  //   var a = await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
-  //   print(a);
-  // }
+  Future _initWx() async {
+    // if (await fluwx.isWeChatInstalled()) {
+    //   await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
+    //   print('初始化完成');
+    // } else {
+    //   print('微信未安装');
+    // }
+    var a = await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
+    print(a);
+  }
 
   @override
   void initState() {
     super.initState();
-    dio.options.baseUrl = 'https://yinchengnuo.com/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.2.106/dwbsapp'; // 配置 baseUrl
-    // dio.options.baseUrl = 'http://192.168.0.102/dwbsapp'; // 配置 baseUrl
+    dio.options.baseUrl = baseURL; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
-    // this._initWx(); // 初始化微信
+    this._initWx(); // 初始化微信
   }
 
   @override

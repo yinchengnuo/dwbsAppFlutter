@@ -111,11 +111,11 @@ class _PageManageTeamState extends State<PageManageTeam> {
               SizedBox(height: Ycn.px(10)),
               Wrap(
                 children: <Widget>[
-                  IndexKingkongItem(src: 'lib/images/home/index/team-manage.png', title: '团员管理', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/team-achievement.png', title: '团队业绩', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/my-invite.png', title: '我的邀请', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/register-examine.png', title: '注册审核', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/invite-proxy.png', title: '邀请代理', route: '/test'),
+                  IndexKingkongItem(src: 'lib/images/home/index/team-manage.png', title: '团员管理', route: '/member-manage'),
+                  IndexKingkongItem(src: 'lib/images/home/index/team-achievement.png', title: '团队业绩', route: '/team-achievement'),
+                  IndexKingkongItem(src: 'lib/images/home/index/my-invite.png', title: '我的邀请', route: '/my-invite'),
+                  IndexKingkongItem(src: 'lib/images/home/index/register-examine.png', title: '注册审核', route: '/register-examine'),
+                  IndexKingkongItem(src: 'lib/images/home/index/invite-proxy.png', title: '邀请代理', route: '/invite-proxy'),
                 ],
               )
             ],

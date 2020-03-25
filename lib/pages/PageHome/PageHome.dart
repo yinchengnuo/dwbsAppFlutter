@@ -105,6 +105,10 @@ class _PageHomeState extends State<PageHome> {
   void initState() {
     super.initState();
     this._getUserStatus();
+    EventBus().on('SHOWMOREARTICLE', (e) {
+      Storage.setter('SHOWMOREARTICLE', 'SHOWMOREARTICLE');
+      this._switchTab(2);
+    });
   }
 
   @override
@@ -126,41 +130,51 @@ class _PageHomeState extends State<PageHome> {
     return Consumer2(builder: (BuildContext context, ProviderUserInfo userinfo, ProviderMessage message, Widget child) {
       this.__message = message;
       this.__userinfo = userinfo;
-      return Scaffold(
-        body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
-        bottomNavigationBar: Container(
-          height: Ycn.px(97),
-          decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Color.fromRGBO(178, 178, 178, 0.1)))),
-          child: Row(
-            children: <Widget>[
-              ...this
-                  ._tabList
-                  .map(
-                    (item) => Expanded(
-                      child: Material(
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: () => this._switchTab(this._tabList.indexOf(item)),
-                          child: this._tabList.indexOf(item) == 3
-                              ? Stack(
-                                  children: <Widget>[
-                                    Positioned.fill(
-                                      child: CustomBottomNavigationBarItem(
-                                          item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
-                                    ),
-                                    Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: this.__message.totalMessageNum)),
-                                  ],
-                                )
-                              : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+      return WillPopScope(
+          onWillPop: () async {
+            final res = await Ycn.modal(context, content: ['确定退出大卫博士？']);
+            if (res == null) {
+              return false;
+            } else {
+              return true;
+            }
+          },
+          child: Scaffold(
+            body: PageView(children: this._pageList, controller: this._pageController, physics: NeverScrollableScrollPhysics()),
+            bottomNavigationBar: Container(
+              height: Ycn.px(97),
+              decoration: BoxDecoration(border: Border(top: BorderSide(width: Ycn.px(1), color: Color.fromRGBO(178, 178, 178, 0.1)))),
+              child: Row(
+                children: <Widget>[
+                  ...this
+                      ._tabList
+                      .map(
+                        (item) => Expanded(
+                          child: Material(
+                            color: Colors.white,
+                            child: InkWell(
+                              onTap: () => this._switchTab(this._tabList.indexOf(item)),
+                              child: this._tabList.indexOf(item) == 3
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Positioned.fill(
+                                          child: CustomBottomNavigationBarItem(
+                                              item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+                                        ),
+                                        Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: this.__message.totalMessageNum)),
+                                      ],
+                                    )
+                                  : CustomBottomNavigationBarItem(
+                                      item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ],
-          ),
-        ),
-      );
+                      )
+                      .toList(),
+                ],
+              ),
+            ),
+          ));
     });
   }
 }

@@ -12,10 +12,11 @@ class PageWebView extends StatelessWidget {
     }
     return Scaffold(
       body: SafeArea(
-          child: WebView(
-        initialUrl: args['url'],
-        javascriptMode: JavascriptMode.unrestricted,
-      )),
+        child: WebView(
+          initialUrl: args['url'],
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
+      ),
     );
   }
 }

@@ -39,7 +39,7 @@ class _PageSafeManageState extends State<PageSafeManage> {
             color: Colors.white,
             margin: EdgeInsets.only(bottom: Ycn.px(1)),
             child: MaterialInkWell(
-              onTap: () {},
+              onTap: () => Navigator.of(context).pushNamed('/apply-return'),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Ycn.px(32)),
                 child: Row(

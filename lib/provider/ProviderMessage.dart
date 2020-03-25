@@ -86,12 +86,8 @@ class ProviderMessage with ChangeNotifier {
   List get systemMessages => [...this._message['system'], ...this._message['systemLOCAL']];
 
   // 获取所有缓存的系统消息大小
-  String get messageStorageSize {
-    return '${([
-          ...this._message['systemLOCAL'],
-          ...this._message['myOrderLOCAL'],
-          ...this._message['downOrderLOCAL']
-        ].toString().length / 1024).floor()}KB';
+  double get messageStorageSize {
+    return [...this._message['systemLOCAL'], ...this._message['myOrderLOCAL'], ...this._message['downOrderLOCAL']].toString().length / 1024;
   }
 
   // 清除服务器未读的订单消息

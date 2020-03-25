@@ -36,23 +36,25 @@ class _PageADState extends State<PageAD> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Image.memory(
-            Uint8List.fromList(this._bytesList),
-            width: Ycn.screenW(),
-            height: Ycn.screenH(),
-            fit: BoxFit.fill,
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          body: Stack(
+            children: <Widget>[
+              Image.memory(
+                Uint8List.fromList(this._bytesList),
+                width: Ycn.screenW(),
+                height: Ycn.screenH(),
+                fit: BoxFit.fill,
+              ),
+              Positioned(
+                right: Ycn.px(24),
+                bottom: Ycn.px(56),
+                child: ReduceCounter(),
+              )
+            ],
           ),
-          Positioned(
-            right: Ycn.px(24),
-            bottom: Ycn.px(56),
-            child: ReduceCounter(),
-          )
-        ],
-      ),
-    );
+        ));
   }
 }
 

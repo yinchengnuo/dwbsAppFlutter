@@ -1,11 +1,10 @@
-import 'package:dwbs_app_flutter/common/components.dart';
-
 import '../../common/Ycn.dart';
 import '../../apis/order.dart';
 import '../../common/Storage.dart';
 import '../../common/EventBus.dart';
 import 'package:flutter/material.dart';
 import 'components/OrderListItem.dart';
+import 'package:dwbs_app_flutter/common/components.dart';
 
 class PageMyOrder extends StatefulWidget {
   PageMyOrder({Key key}) : super(key: key);
@@ -70,6 +69,7 @@ class _PageMyOrderState extends State<PageMyOrder> with SingleTickerProviderStat
       this._pageData['index'] = int.parse(Storage.getter('ORDERTYPE'));
       Storage.del('ORDERTYPE');
     }
+
     this._tabController = TabController(initialIndex: this._pageData['index'], length: this._pageData['navs'].length, vsync: this);
 
     // 左右拖动改变 tabIndex
@@ -105,6 +105,7 @@ class _PageMyOrderState extends State<PageMyOrder> with SingleTickerProviderStat
         this._pageData['data'][1].removeAt(index);
       });
       this._scrollControllerListener(this._pageData['index']);
+      Ycn.toast('确认收货成功');
     });
 
     this._request(); // 发送网络请求

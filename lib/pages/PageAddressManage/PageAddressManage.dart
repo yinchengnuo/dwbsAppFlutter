@@ -13,9 +13,7 @@ class PageAddressManage extends StatefulWidget {
 }
 
 class _PageAddressManageState extends State<PageAddressManage> {
-  Function _choose;
   bool _loading = false;
-  bool _requesting = false;
   ProviderAddress __address;
 
   // 请求地址

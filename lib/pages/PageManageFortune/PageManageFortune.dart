@@ -111,10 +111,10 @@ class _PageManageFortuneState extends State<PageManageFortune> {
               SizedBox(height: Ycn.px(10)),
               Wrap(
                 children: <Widget>[
-                  IndexKingkongItem(src: 'lib/images/home/index/income-running.png', title: '收入流水', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/reward-out.png', title: '奖励支出', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/reward-in.png', title: '奖励收入', route: '/test'),
-                  IndexKingkongItem(src: 'lib/images/home/index/income-shop.png', title: '零售录单', route: '/test'),
+                  IndexKingkongItem(src: 'lib/images/home/index/income-running.png', title: '收入流水', route: '/income-running'),
+                  IndexKingkongItem(src: 'lib/images/home/index/reward-out.png', title: '奖励支出', route: '/reward-out'),
+                  IndexKingkongItem(src: 'lib/images/home/index/reward-in.png', title: '奖励收入', route: '/reward-in'),
+                  IndexKingkongItem(src: 'lib/images/home/index/income-shop.png', title: '零售录单', route: '/record-order'),
                 ],
               )
             ],

@@ -14,7 +14,7 @@ class DataTeamRank extends StatelessWidget {
       margin: EdgeInsets.only(bottom: Ycn.px(24)),
       child: Column(
         children: <Widget>[
-          DataTitle(data: this.data, title: '本月团队个人业绩排行榜', handle: () => print('点击了 => 本月团队个人业绩排行榜 => 更多')),
+          DataTitle(data: this.data, title: '本月团队个人业绩排行榜', handle: () => Navigator.of(context).pushNamed('/team-achievement')),
           ...this
               .data['team_rank']
               .map((item) => Container(

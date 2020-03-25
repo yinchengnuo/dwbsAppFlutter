@@ -8,21 +8,14 @@ class CommListItemWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return last
+    return this.last
         ? Column(
             children: <Widget>[
               CommListItem(data: data, type: type, index: index, provider: provider),
               Container(
                 height: Ycn.px(90),
                 color: Colors.white,
-                child: Center(
-                  child: Text(
-                    page == 0 ? '没有更多了' : '加载中...',
-                    style: TextStyle(
-                      fontSize: Ycn.px(28),
-                    ),
-                  ),
-                ),
+                child: Center(child: Text(this.page == 0 ? '没有更多了' : '加载中...', style: TextStyle(fontSize: Ycn.px(28)))),
               ),
             ],
           )

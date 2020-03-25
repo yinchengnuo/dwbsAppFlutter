@@ -1,3 +1,4 @@
+import 'package:dwbs_app_flutter/common/EventBus.dart';
 import 'package:flutter/material.dart';
 import '../../../../common/Ycn.dart';
 
@@ -33,9 +34,7 @@ class IndexBottomArtilce extends StatelessWidget {
               child: Material(
                 color: Colors.white,
                 child: InkWell(
-                  onTap: () {
-                    print('点击了首页文章');
-                  },
+                  onTap: () => Navigator.of(context).pushNamed('/article-detail', arguments: {'type': -1, 'index': 0}),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -103,9 +102,7 @@ class IndexBottomArtilce extends StatelessWidget {
             child: Material(
               color: Colors.white,
               child: InkWell(
-                onTap: () {
-                  print('点击了显示更多');
-                },
+                onTap: () => EventBus().emit('SHOWMOREARTICLE'),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[Text('显示更多', style: TextStyle(fontSize: Ycn.px(26))), Icon(Icons.arrow_forward_ios, size: Ycn.px(26))],

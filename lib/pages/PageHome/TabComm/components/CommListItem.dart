@@ -56,9 +56,12 @@ class CommListItem extends StatelessWidget {
                   ),
                   Material(
                     color: Colors.transparent,
-                    child: InkWell(onTap: () {
-                      print('点击了文章');
-                    }),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).pushNamed('/article-detail', arguments: {
+                        'type': this.type,
+                        'index': this.index,
+                      }),
+                    ),
                   ),
                 ],
               ),
@@ -110,9 +113,12 @@ class CommListItem extends StatelessWidget {
                   ),
                   Material(
                     color: Colors.transparent,
-                    child: InkWell(onTap: () {
-                      print('点击了视频');
-                    }),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).pushNamed('/article-detail', arguments: {
+                        'type': this.type,
+                        'index': this.index,
+                      }),
+                    ),
                   )
                 ],
               ),
@@ -193,16 +199,15 @@ class CommListItem extends StatelessWidget {
                             Icon(Icons.date_range, size: Ycn.px(32), color: Theme.of(context).accentColor),
                             SizedBox(width: Ycn.px(11)),
                             Text('开播时间：', style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).accentColor)),
-                            Text('${formatTime[1]}月${formatTime[3]}日 ${formatTime[4]}:${formatTime[5]}',
-                                style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).accentColor))
+                            Text(
+                              '${formatTime[1]}月${formatTime[3]}日 ${formatTime[4]}:${formatTime[5]}',
+                              style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).accentColor),
+                            )
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Text(
-                              '查看详情',
-                              style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).textTheme.body1.color),
-                            ),
+                            Text('查看详情', style: TextStyle(fontSize: Ycn.px(26), color: Theme.of(context).textTheme.body1.color)),
                             Icon(Icons.arrow_forward_ios, size: Ycn.px(26), color: Theme.of(context).textTheme.body2.color)
                           ],
                         ),
@@ -214,11 +219,9 @@ class CommListItem extends StatelessWidget {
             ),
             Material(
               color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  print('点击了直播');
-                },
-              ),
+              child: InkWell(onTap: () {
+                Navigator.of(context).pushNamed('/webview', arguments: {'url': this.data['url']});
+              }),
             )
           ],
         ),

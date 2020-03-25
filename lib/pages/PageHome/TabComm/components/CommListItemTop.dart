@@ -9,6 +9,7 @@ class CommListItemTop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: Ycn.px(81),
+      color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

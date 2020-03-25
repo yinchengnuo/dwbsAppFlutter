@@ -13,7 +13,7 @@ class DataIncome extends StatelessWidget {
       margin: EdgeInsets.only(bottom: Ycn.px(10)),
       child: Column(
         children: <Widget>[
-          DataTitle(data: this.data, title: '本月营收情况', handle: () => print('点击了 => 本月营收情况 => 更多')),
+          DataTitle(data: this.data, title: '本月营收情况', handle: () => Navigator.of(context).pushNamed('/income-running')),
           Expanded(
             child: Container(
               color: Colors.white,
@@ -30,7 +30,7 @@ class DataIncome extends StatelessWidget {
                       children: <Widget>[
                         CircularProgressIndicator(
                           value: this.data['month_income'] / this.data['total_income'],
-                          strokeWidth: 10,
+                          strokeWidth: Ycn.px(18),
                           backgroundColor: Ycn.getColor('#FFB769'),
                         ),
                         Column(

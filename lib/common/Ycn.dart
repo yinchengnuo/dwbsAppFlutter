@@ -56,7 +56,7 @@ class Ycn {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: Ycn.px(8), horizontal: Ycn.px(12)),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(px(8)), color: Color.fromRGBO(0, 0, 0, 0.6)),
-            child: Text(info.toString(), style: TextStyle(fontSize: Ycn.px(32), height: 1.25, letterSpacing: Ycn.px(2))),
+            child: Text(info.toString(), textAlign: TextAlign.center, style: TextStyle(fontSize: Ycn.px(32), height: 1.25, letterSpacing: Ycn.px(2))),
           ),
         ),
       );
@@ -144,6 +144,22 @@ class Ycn {
         return '';
     }
   }
+
+  // 格式化收入类型
+  static formatIncomeType(status) {
+    switch (status.toString()) {
+      case '0':
+        return '订单收入';
+      case '1':
+        return '零售收入';
+      case '2':
+        return '邀请奖励';
+      case '3':
+        return '店铺奖励';
+      case '4':
+        return '业绩奖励';
+      default:
+        return '';
+    }
+  }
 }
-
-

@@ -6,7 +6,7 @@ class AllIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('各种 icon')),
+      appBar: AppBar(centerTitle: true, title: Text('icons')),
       body: Builder(
         builder: (BuildContext context) {
           return GridView.builder(
@@ -17,6 +17,7 @@ class AllIcon extends StatelessWidget {
               return IconButton(
                 icon: Icon(icons[index]['icon']),
                 onPressed: () {
+                  Scaffold.of(context).hideCurrentSnackBar();
                   Scaffold.of(context).showSnackBar(SnackBar(content: Text(icons[index]['name'])));
                 },
               );

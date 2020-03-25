@@ -57,15 +57,13 @@ class _TabMyState extends State<TabMy> {
                                   alignment: Alignment(-1, -1),
                                   decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Ycn.px(50))),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          'https://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1582962246&t=76ddb9aebe627c4a5bebc91cba9fab84'),
-                                    ),
+                                    image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(this.__userinfo.userinfo['avatar'])),
                                   ),
                                   child: Container(
                                     transform: Matrix4.translationValues(Ycn.px(56), Ycn.px(49), 0),
-                                    child: Image.asset('lib/images/home/my/has-shop.png', width: Ycn.px(53), height: Ycn.px(63)),
+                                    child: this.__userinfo.userinfo['store']
+                                        ? Image.asset('lib/images/home/my/has-shop.png', width: Ycn.px(53), height: Ycn.px(63))
+                                        : null,
                                   ),
                                 ),
                                 Expanded(
@@ -79,12 +77,20 @@ class _TabMyState extends State<TabMy> {
                                       children: <Widget>[
                                         Row(
                                           children: <Widget>[
-                                            Text('我是谁', style: TextStyle(fontSize: Ycn.px(32))),
-                                            SizedBox(width: Ycn.px(17)),
-                                            UserLevel(level: '顶级代理'),
+                                            ConstrainedBox(
+                                              constraints: BoxConstraints(maxWidth: Ycn.px(234)),
+                                              child: Text(
+                                                '${this.__userinfo.userinfo['nickname']}顶顶顶顶顶顶顶顶顶大大大大大大',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: Ycn.px(32), height: 1.25),
+                                              ),
+                                            ),
+                                            SizedBox(width: Ycn.px(15)),
+                                            UserLevel(level: '${this.__userinfo.userinfo['level']}'),
                                           ],
                                         ),
-                                        Text('ID:123456789',
+                                        Text('ID:${this.__userinfo.userinfo['uuid']}',
                                             style: TextStyle(fontSize: Ycn.px(24), color: Theme.of(context).textTheme.body2.color)),
                                       ],
                                     ),
@@ -96,7 +102,10 @@ class _TabMyState extends State<TabMy> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () => Ycn.toast('点击了我的名片'),
+                                      onTap: () => Navigator.of(context).pushNamed(
+                                        '/person-card',
+                                        arguments: {'id': this.__userinfo.userinfo['id'], 'self': true},
+                                      ),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
@@ -139,7 +148,7 @@ class _TabMyState extends State<TabMy> {
                             Image.asset('lib/images/home/my/user-up.png'),
                             Material(
                               color: Colors.transparent,
-                              child: InkWell(onTap: () => Ycn.toast('点击了代理升级')),
+                              child: InkWell(onTap: () => Navigator.of(context).pushNamed('/proxy-updata')),
                             )
                           ],
                         ),
@@ -153,8 +162,8 @@ class _TabMyState extends State<TabMy> {
                 child: Row(
                   children: <Widget>[
                     ActiveItem(img: 'lib/images/home/my/zhengbasai.png', title: '争霸赛', onTap: () => Ycn.toast('点击了争霸赛')),
-                    ActiveItem(img: 'lib/images/home/my/shalong.png', title: '线下沙龙', onTap: () => Ycn.toast('点击了线下沙龙')),
-                    ActiveItem(img: 'lib/images/home/my/mixun.png', title: '密训营', onTap: () => Ycn.toast('点击了密训营')),
+                    ActiveItem(img: 'lib/images/home/my/shalong.png', title: '线下沙龙', onTap: () => Ycn.toast('暂未开放')),
+                    ActiveItem(img: 'lib/images/home/my/mixun.png', title: '密训营', onTap: () => Ycn.toast('暂未开放')),
                   ],
                 ),
               ),

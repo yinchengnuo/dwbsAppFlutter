@@ -1,12 +1,15 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dwbs_app_flutter/common/PAGEPreviewImage/PAGEPreviewImage.dart';
+import 'package:share/share.dart';
 import '../../common/Ycn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:dwbs_app_flutter/apis/user.dart';
+import 'package:dwbs_app_flutter/apis/team.dart';
 import 'package:dwbs_app_flutter/common/components.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dwbs_app_flutter/common/PAGEPreviewImage/PAGEPreviewImage.dart';
 
 class PageAuthCard extends StatefulWidget {
   PageAuthCard({Key key}) : super(key: key);
@@ -24,17 +27,101 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
     setState(() {
       this._loading = true;
     });
-    Dio().get(this._data['url'], options: Options(responseType: ResponseType.bytes)).then((res) {
-      ImageGallerySaver.saveImage(Uint8List.fromList(res.data)).then((res) {
-        Ycn.toast('保存成功');
-      }).catchError((e) {
-        Ycn.toast('保存失败，请检查是否为大卫博士开启写入存储权限');
-      });
+    Dio().get(this._data['url'], options: Options(responseType: ResponseType.bytes)).then((res) async {
+      if ((await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage] == PermissionStatus.granted) {
+        ImageGallerySaver.saveImage(Uint8List.fromList(res.data)).then((res) {
+          Ycn.toast('保存成功 ${Uri.decodeFull(res)}');
+        });
+      } else {
+        Ycn.toast('保存失败，请为大卫博士开启写入存储权限');
+      }
     }).whenComplete(() {
       setState(() {
         this._loading = false;
       });
     });
+  }
+
+  // 分享证书
+  void _share() {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        builder: (BuildContext context) {
+          return Container(
+            height: Ycn.px(220),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          child: MaterialInkWell(
+                            onTap: () => Ycn.toast('分享到微信好友'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset('lib/images/public/sharewx.png', width: Ycn.px(56), height: Ycn.px(56), fit: BoxFit.fill),
+                                SizedBox(height: Ycn.px(27)),
+                                Text('分享好友', style: TextStyle(fontSize: Ycn.px(26))),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: MaterialInkWell(
+                            onTap: () => Ycn.toast('分享到朋友圈'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset('lib/images/public/sharepyq.png', width: Ycn.px(56), height: Ycn.px(56), fit: BoxFit.fill),
+                                SizedBox(height: Ycn.px(27)),
+                                Text('分享朋友圈', style: TextStyle(fontSize: Ycn.px(26))),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: MaterialInkWell(
+                            onTap: () => this._shareMore(context),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.more_horiz, size: Ycn.px(56)),
+                                SizedBox(height: Ycn.px(27)),
+                                Text('更多', style: TextStyle(fontSize: Ycn.px(26))),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                    ],
+                  ),
+                ),
+                Container(width: double.infinity, height: Ycn.px(1), color: Ycn.getColor('#B2B2B2')),
+                Container(
+                  height: Ycn.px(64),
+                  child: MaterialInkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Center(child: Text('取消', style: TextStyle(fontSize: Ycn.px(26)))),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  // 点击分享更多
+  _shareMore(context) {
+    Navigator.of(context).pop();
+    Share.share('https://baidu.com', subject: '授权证书');
   }
 
   // 获取授权书信息
@@ -74,18 +161,25 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
                 child: Column(
                   children: <Widget>[
                     Container(
-                        height: Ycn.px(922),
-                        color: Colors.white,
-                        alignment: Alignment(0, 0),
-                        child: GestureDetector(
-                          onTap: this._previewImg,
-                          child: Image.network(
-                            this._data['url'],
-                            width: Ycn.px(481),
-                            height: Ycn.px(836),
-                            fit: BoxFit.fill,
+                      height: Ycn.px(922),
+                      color: Colors.white,
+                      alignment: Alignment(0, 0),
+                      child: GestureDetector(
+                        onTap: this._previewImg,
+                        child: Container(
+                          width: Ycn.px(481),
+                          height: Ycn.px(836),
+                          child: CachedNetworkImage(
+                            imageUrl: this._data['url'],
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(image: DecorationImage(image: imageProvider, fit: BoxFit.fill)),
+                            ),
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                     SizedBox(height: Ycn.px(88)),
                     Container(
                       height: Ycn.px(88),
@@ -116,7 +210,7 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
                               width: Ycn.px(315),
                               color: Theme.of(context).accentColor,
                               child: MaterialInkWell(
-                                onTap: () => Navigator.of(context).pushNamed('/camera'),
+                                onTap: this._share,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -138,27 +232,4 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
       ),
     );
   }
-}
-
-class FadeRoute extends PageRouteBuilder {
-  final Widget page;
-  FadeRoute({this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
 }

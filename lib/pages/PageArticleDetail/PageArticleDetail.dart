@@ -1,4 +1,5 @@
 import 'package:dwbs_app_flutter/common/components.dart';
+import 'package:dwbs_app_flutter/config.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../common/Ycn.dart';
@@ -39,8 +40,10 @@ class _PageArticleDetailState extends State<PageArticleDetail> {
                   )),
               Expanded(
                 child: WebView(
-                  // initialUrl: type == -1 ? this.__comm.indexArticle['id'] : this.__comm.commList[type][index]['id'],
-                  initialUrl: 'https://mp.weixin.qq.com/s/_tnkaY76-qUU-eQTziNqDQ',
+                  initialUrl: type == -1
+                      ? '${baseURL}${articleURL}?id=${this.__comm.indexArticle['id']}'
+                      : '${baseURL}${articleURL}?id=${this.__comm.commList[type][index]['id']}',
+                  // initialUrl: 'https://mp.weixin.qq.com/s/_tnkaY76-qUU-eQTziNqDQ',
                   onPageFinished: (e) => setState(() => this._loading = false),
                   javascriptMode: JavascriptMode.unrestricted,
                 ),

@@ -6,4 +6,3 @@ Future apiCommListChanglai(data) => dio.get('/article/show_list?type=2', queryPa
 Future apiCommListShoucang(data) => dio.get('/article/mycollection', queryParameters: data);
 
 Future apiCommListItemAction(data) => dio.get('/article/like', queryParameters: data);
-

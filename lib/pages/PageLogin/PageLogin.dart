@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
+import 'package:fluwx/fluwx.dart';
+
 import '../../apis/auth.dart';
 import '../../common/Ycn.dart';
 import '../../common/Storage.dart';
+// import 'package:jverify/jverify.dart';
 import '../../common/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dwbs_app_flutter/config.dart';
 
 class PageLogin extends StatefulWidget {
   PageLogin({Key key}) : super(key: key);
@@ -14,6 +19,7 @@ class PageLogin extends StatefulWidget {
 }
 
 class _PageLoginState extends State<PageLogin> {
+  Timer timer;
   int _count = 0; // 倒计时数字
   int _maxCount = 120; // 倒计时长
   String _area = '中国大陆'; // 地区
@@ -52,7 +58,8 @@ class _PageLoginState extends State<PageLogin> {
   // 点击获取验证码
   void _getCode() {
     if (!(this._textEditingController1.text.length < 5)) {
-      this._pulldownKB();
+      // this._pulldownKB();
+      this._focusNode2.requestFocus();
       if (this._count == 0) {
         if (!this._requesting) {
           setState(() {
@@ -67,10 +74,11 @@ class _PageLoginState extends State<PageLogin> {
                 this._isReg = num.parse(res['data']['status'].toString()) == 0 ? false : true;
               });
               Timer.periodic(Duration(seconds: 1), (timer) {
+                this.timer = timer;
                 setState(() {
                   this._count--;
                   if (this._count == 0) {
-                    timer.cancel();
+                    this.timer.cancel();
                   }
                 });
               });
@@ -92,7 +100,7 @@ class _PageLoginState extends State<PageLogin> {
     }
   }
 
-  // 点击立即登录
+  // 点击立即登录/注册
   void _login() {
     this._pulldownKB();
     if (this._textEditingController1.text.length < 5) {
@@ -120,7 +128,9 @@ class _PageLoginState extends State<PageLogin> {
           'recom_code': this._textEditingController3.text
         }).then((status) async {
           final res = status.data;
+          print(res['data']['token']);
           await Storage.setter('token', res['data']['token']);
+          print(Storage.getter('token'));
           Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
         }).whenComplete(() {
           setState(() {
@@ -141,7 +151,10 @@ class _PageLoginState extends State<PageLogin> {
           'verify_code': this._textEditingController2.text,
         }).then((status) async {
           final res = status.data;
+          print('===================================================');
+          print(res['data']['token']);
           await Storage.setter('token', res['data']['token']);
+          print(Storage.getter('token'));
           Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
         }).whenComplete(() {
           setState(() {
@@ -150,6 +163,76 @@ class _PageLoginState extends State<PageLogin> {
           });
         });
       }
+    }
+  }
+
+  // 点击微信登陆
+  void loginByWx() async {
+    if (await isWeChatInstalled()) {
+      sendWeChatAuth(scope: "snsapi_userinfo", state: "wechat_sdk_demo_test");
+    } else {
+      Ycn.toast('微信未安装');
+    }
+  }
+
+  // 本机号码一键登录
+  void _loginByJG() {
+    // final Jverify jverify = Jverify();
+    // jverify.setup(appKey: "d204f771e0cee7d007717102", channel: "devloper-default");
+    // jverify.isInitSuccess().then((res) {
+    //   if (res['result']) {
+    //     jverify.checkVerifyEnable().then((res) {
+    //       setState(() {
+    //         if (res['result']) {
+    //           Ycn.toast("当前网络环境【支持认证】！");
+    //           jverify.preLogin().then((res) {
+    //             Ycn.toast('code: ${res['code']} message: ${res['message']}');
+    //           });
+    //         } else {
+    //           Ycn.toast("当前网络环境【不支持认证】！");
+    //         }
+    //       });
+    //     });
+    //   } else {
+    //     Ycn.toast("初始化失败");
+    //   }
+    // });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    responseFromAuth.listen((res) {
+      if (res is WeChatAuthResponse) {
+        setState(() {
+          this._loading = true;
+        });
+        Dio()
+            .get(
+                'https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${secret}&code=${res.code}&grant_type=authorization_code')
+            .then((res) {
+          apiWxlogin(Ycn.clone(res.data)).then((status) async {
+            if (status.data['code'].toString() == '200') {
+              await Storage.setter('token', status.data['data']['token']);
+              Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+            } else {
+              Navigator.of(context).pushNamed('/bind-phone', arguments: Ycn.clone(res.data));
+            }
+          }).whenComplete(() {
+            setState(() {
+              this._loading = false;
+            });
+          });
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (this.timer != null) {
+      this.timer.cancel();
     }
   }
 
@@ -162,7 +245,12 @@ class _PageLoginState extends State<PageLogin> {
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(Ycn.px(168) - Ycn.mediaQuery.padding.top),
-            child: AppBar(title: Text(''), elevation: 0, automaticallyImplyLeading: false),
+            child: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              title: GestureDetector(onLongPress: this._loginByJG, child: Text('    ')),
+            ),
           ),
           body: SingleChildScrollView(
             child: ConstrainedBox(
@@ -307,9 +395,7 @@ class _PageLoginState extends State<PageLogin> {
                                 ),
                               )
                             : Container(width: 0, height: 0),
-                        this._isReg
-                            ? Divider(height: Ycn.px(1), color: Theme.of(context).textTheme.body1.color)
-                            : Container(width: 0, height: 0),
+                        this._isReg ? Divider(height: Ycn.px(1), color: Theme.of(context).textTheme.body1.color) : Container(width: 0, height: 0),
                         Container(
                           height: Ycn.px(80),
                           margin: EdgeInsets.fromLTRB(Ycn.px(0), Ycn.px(51), Ycn.px(0), Ycn.px(40)),
@@ -318,7 +404,7 @@ class _PageLoginState extends State<PageLogin> {
                             onPressed: this._login,
                             color: Theme.of(context).accentColor,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Ycn.px(80))),
-                            child: Text('立即登录', style: TextStyle(color: Colors.white, fontSize: Ycn.px(34))),
+                            child: Text('立即${this._isReg ? '注册' : '登录'}', style: TextStyle(color: Colors.white, fontSize: Ycn.px(34))),
                           ),
                         ),
                         Row(
@@ -366,7 +452,7 @@ class _PageLoginState extends State<PageLogin> {
                               ),
                               child: FlatButton(
                                   padding: EdgeInsets.all(0),
-                                  onPressed: () => Ycn.toast('微信登陆暂未开放'),
+                                  onPressed: this.loginByWx,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Ycn.px(88))),
                                   child: Image.asset('lib/images/public/wx-login.png', width: Ycn.px(45), height: Ycn.px(45))),
                             ),

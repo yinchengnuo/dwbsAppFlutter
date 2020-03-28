@@ -1,8 +1,10 @@
 import 'package:dwbs_app_flutter/common/Storage.dart';
 import 'package:dwbs_app_flutter/common/Ycn.dart';
+import 'package:dwbs_app_flutter/common/flutterLocalNotificationsPlugin.dart';
 import 'package:flutter/material.dart';
 // import 'package:vibration/vibration.dart';
 import 'package:dwbs_app_flutter/apis/app.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ProviderMessage with ChangeNotifier {
   Map _message = {
@@ -137,6 +139,27 @@ class ProviderMessage with ChangeNotifier {
     this._message['myOrder'] = res['data']['myOrder'];
     this._message['downOrder'] = res['data']['downOrder'];
     notifyListeners();
+    if (this.totalMessageNum > 0) {
+      await flutterLocalNotificationsPlugin.show(
+        1,
+        '您有新的${this.totalMessageNum}条未读消息',
+        this.previewOrderMessageText == '暂无新消息' ? this.previewSystemMessageText : this.previewOrderMessageText,
+        NotificationDetails(
+          AndroidNotificationDetails(
+            'your channel id',
+            'your channel name',
+            'your channel description',
+            icon: 'app_icon',
+            style: AndroidNotificationStyle.BigText,
+            importance: Importance.Max,
+            priority: Priority.High,
+          ),
+          IOSNotificationDetails(),
+        ),
+        payload: 'READ_MESSAGE',
+      );
+      Storage.setter('READ_MESSAGE', 'READ_MESSAGE');
+    }
   }
 
   // 清除系统通知缓存

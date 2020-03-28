@@ -1,3 +1,5 @@
+import 'package:dwbs_app_flutter/config.dart';
+import 'package:fluwx/fluwx.dart';
 import 'package:share/share.dart';
 import '../../../../common/Ycn.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ class CommListItemBottom extends StatelessWidget {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(Ycn.px(24)))),
         builder: (BuildContext context) {
           return Container(
             height: Ycn.px(220),
@@ -24,7 +25,23 @@ class CommListItemBottom extends StatelessWidget {
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => Ycn.toast('分享到微信好友'),
+                            onTap: () async {
+                              if (await isWeChatInstalled()) {
+                                Navigator.of(context).pop();
+                                shareToWeChat(
+                                  WeChatShareWebPageModel(
+                                    scene: WeChatScene.SESSION,
+                                    title: this.data['title'],
+                                    thumbnail: this.data['imgurl'][0],
+                                    description: this.data['summary'],
+                                    // webPage: '${baseURL}${articleURL}?id=${this.data['id']}',
+                                    webPage: 'https://mp.weixin.qq.com/s/_tnkaY76-qUU-eQTziNqDQ',
+                                  ),
+                                );
+                              } else {
+                                Ycn.toast('微信未安装');
+                              }
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -39,7 +56,23 @@ class CommListItemBottom extends StatelessWidget {
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => Ycn.toast('分享到朋友圈'),
+                            onTap: () async {
+                              if (await isWeChatInstalled()) {
+                                Navigator.of(context).pop();
+                                shareToWeChat(
+                                  WeChatShareWebPageModel(
+                                    scene: WeChatScene.TIMELINE,
+                                    title: this.data['title'],
+                                    thumbnail: this.data['imgurl'][0],
+                                    description: this.data['summary'],
+                                    webPage: '${baseURL}${articleURL}?id=${this.data['id']}',
+                                    // webPage: 'https://mp.weixin.qq.com/s/_tnkaY76-qUU-eQTziNqDQ',
+                                  ),
+                                );
+                              } else {
+                                Ycn.toast('微信未安装');
+                              }
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -54,7 +87,10 @@ class CommListItemBottom extends StatelessWidget {
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => this._shareMore(context),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Share.share('https://baidu.com', subject: this.data['title']);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -82,12 +118,6 @@ class CommListItemBottom extends StatelessWidget {
             ),
           );
         });
-  }
-
-  // 分享到更多
-  _shareMore(context) {
-    Navigator.of(context).pop();
-    Share.share('https://baidu.com', subject: this.data['title']);
   }
 
   @override

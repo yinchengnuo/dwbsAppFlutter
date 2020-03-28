@@ -9,10 +9,12 @@ class EventBus {
   static EventBus _singleton = new EventBus._internal();
 
   //工厂构造函数
-  factory EventBus()=> _singleton;
+  factory EventBus() => _singleton;
 
   //保存事件订阅者队列，key:事件名(id)，value: 对应事件的订阅者队列
   var _emap = new Map<Object, List<EventCallback>>();
+
+  Map globalData = {'updataProgress': 100};
 
   //添加订阅者
   void on(eventName, EventCallback f) {
@@ -37,7 +39,7 @@ class EventBus {
     var list = _emap[eventName];
     if (list == null) return;
     int len = list.length - 1;
-    //反向遍历，防止订阅者在回调中移除自身带来的下标错位 
+    //反向遍历，防止订阅者在回调中移除自身带来的下标错位
     for (var i = len; i > -1; --i) {
       list[i](arg);
     }

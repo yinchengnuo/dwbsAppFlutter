@@ -80,7 +80,7 @@ class Ycn {
   static String waitString(data, key) => data == null ? '' : data[key].toString();
 
   // 克隆
-  static clone(map) => jsonDecode(jsonEncode(map));
+  static clone(map) => map is String ? jsonDecode(map) : jsonDecode(jsonEncode(map));
 
   // modal 文字
   static modal(context, {title, content, cancel, inputNum, back = true}) async {

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:fluwx/fluwx.dart';
 import 'package:share/share.dart';
 import '../../common/Ycn.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,19 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => Ycn.toast('分享到微信好友'),
+                            onTap: () async {
+                              if (await isWeChatInstalled()) {
+                                Navigator.of(context).pop();
+                                shareToWeChat(
+                                  WeChatShareImageModel(
+                                    scene: WeChatScene.SESSION,
+                                    image: this._data['url'],
+                                  ),
+                                );
+                              } else {
+                                Ycn.toast('微信未安装');
+                              }
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -73,7 +86,19 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => Ycn.toast('分享到朋友圈'),
+                            onTap: () async {
+                              if (await isWeChatInstalled()) {
+                                Navigator.of(context).pop();
+                                shareToWeChat(
+                                  WeChatShareImageModel(
+                                    scene: WeChatScene.TIMELINE,
+                                    image: this._data['url'],
+                                  ),
+                                );
+                              } else {
+                                Ycn.toast('微信未安装');
+                              }
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -88,7 +113,10 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
                       Expanded(
                         child: Container(
                           child: MaterialInkWell(
-                            onTap: () => this._shareMore(context),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Share.share(this._data['url'], subject: '授权证书');
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -116,12 +144,6 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
             ),
           );
         });
-  }
-
-  // 点击分享更多
-  _shareMore(context) {
-    Navigator.of(context).pop();
-    Share.share('https://baidu.com', subject: '授权证书');
   }
 
   // 获取授权书信息

@@ -6,11 +6,13 @@ import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'config.dart';
 import 'router/routes.dart';
 import 'router/onUnknownRoute.dart';
 import 'router/onGenerateRoute.dart';
 import 'router/navigatorObservers.dart';
-import 'package:fluwx/fluwx.dart' as fluwx;
+
+import 'package:fluwx/fluwx.dart';
 
 import 'provider/ProviderComm.dart'; // 社区相关状态
 import 'provider/ProviderAddress.dart'; // 地址状态
@@ -26,30 +28,28 @@ import 'package:dwbs_app_flutter/pages/PageHome/PageHome.dart';
 import 'package:dwbs_app_flutter/pages/PageLogin/PageLogin.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // 语言包
 
-const String baseURL = 'https://yinchengnuo.com/dwbsapp';
-// const String baseURL = 'http://192.168.2.106/dwbsapp';
-// const String baseURL = 'http://192.168.2.108/dwbsapp';
-// const String baseURL = 'http://192.168.43.159/dwbsapp';
-// const String baseURL = 'http://192.168.0.102/dwbsapp';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance(); // 读取缓存
+  Storage.del('READ_MESSAGE');
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)); // 设置状态栏颜色为透明
   if (Storage.getter('AD').toString().isEmpty) {
     try {
       await Storage.setter(
         'AD',
-        (await Dio().get('https://api.jiuweiyun.cn/public/uploads/images/topics/420.jpg',
-                options: Options(
-                  sendTimeout: 3000,
-                  receiveTimeout: 3000,
-                  responseType: ResponseType.bytes,
-                )))
+        (await Dio().get(
+          adURL,
+          options: Options(
+            sendTimeout: 3000,
+            receiveTimeout: 3000,
+            responseType: ResponseType.bytes,
+          ),
+        ))
             .data,
       );
     } catch (e) {}
   }
+
   runApp(MyApp());
 }
 
@@ -66,24 +66,18 @@ class _MyAppState extends State<MyApp> {
   final Color _secondTextColor = Ycn.getColor('#666666'); // 次要要文字颜色
   final Color _thirdTextColor = Ycn.getColor('#999999'); // 最次要要文字颜色
 
+  // 初始化微信登陆
   Future _initWx() async {
-    // if (await fluwx.isWeChatInstalled()) {
-    //   await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
-    //   print('初始化完成');
-    // } else {
-    //   print('微信未安装');
-    // }
-    var a = await fluwx.registerWxApi(appId: 'wxd930ea5d5a258f4f');
-    print(a);
+    print(await registerWxApi(appId: 'wx182f1f0cd7e46e13'));
   }
 
   @override
   void initState() {
     super.initState();
+    this._initWx(); // 初始化微信
     dio.options.baseUrl = baseURL; // 配置 baseUrl
     dio.options.receiveTimeout = 15000; // 配置超时时间
     dio.interceptors.add(CustomInterceptors()); // 配置自定义拦截器
-    this._initWx(); // 初始化微信
   }
 
   @override

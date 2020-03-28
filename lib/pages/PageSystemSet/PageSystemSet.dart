@@ -1,6 +1,15 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:dwbs_app_flutter/apis/app.dart';
+import 'package:dwbs_app_flutter/common/EventBus.dart';
+import 'package:dwbs_app_flutter/common/flutterLocalNotificationsPlugin.dart';
 import 'package:dwbs_app_flutter/provider/ProviderMessage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:install_plugin/install_plugin.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/Ycn.dart';
@@ -39,23 +48,99 @@ class _PageSystemSetState extends State<PageSystemSet> {
 
   // 点击检查更新
   void _checkUpdata() {
-    setState(() {
-      this._loading = true;
-    });
-    apiAppUpdata().then((status) async {
-      if ((await PackageInfo.fromPlatform()).version != status.data['data']['version']) {
-        setState(() {
-          this._loading = false;
-        });
-        Ycn.modalUpdata(context, status.data['data']['version'], status.data['data']['message']).then((res) {
-          if (res != null) {
-            print(status.data['data']['url']);
-            Ycn.toast('新版本开始下载...');
+    if (EventBus().globalData['updataProgress'] == 100) {
+      setState(() {
+        this._loading = true;
+      });
+      apiAppUpdata().then((status) async {
+        if ((await PackageInfo.fromPlatform()).version != status.data['data']['version']) {
+          setState(() {
+            this._loading = false;
+          });
+          Ycn.modalUpdata(context, status.data['data']['version'], status.data['data']['message']).then((res) async {
+            if (res != null) {
+              if (Platform.isAndroid) {
+                if ((await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage] ==
+                    PermissionStatus.granted) {
+                  this._downloadUpdata(status.data['data']['url']);
+                } else {
+                  Ycn.toast('更新失败，请为大卫博士开启写入存储权限');
+                }
+              }
+              Ycn.toast('新版本开始下载...');
+            }
+          });
+        } else {
+          Ycn.toast('当前已是最新版本');
+        }
+      });
+    } else {
+      Ycn.toast('APP更新包正在下载中 ${EventBus().globalData['updataProgress']}%');
+    }
+  }
+
+  // 下载新版安装包
+  void _downloadUpdata(url) async {
+    int progress = 0;
+    String path = '${(await getExternalStorageDirectory()).path}/new.apk';
+    Dio().download(
+      url,
+      path,
+      onReceiveProgress: (int receive, int total) async {
+        if ((receive / total * 100).floor() > progress) {
+          progress = (receive / total * 100).floor();
+          EventBus().globalData['updataProgress'] = progress;
+          await flutterLocalNotificationsPlugin.show(
+            0,
+            progress == 100 ? '更新包下载成功' : '更新包下载中',
+            '$progress%',
+            NotificationDetails(
+              AndroidNotificationDetails(
+                'progress channel',
+                'progress channel',
+                'progress channel description',
+                channelShowBadge: false,
+                importance: Importance.Max,
+                priority: Priority.High,
+                onlyAlertOnce: true,
+                autoCancel: progress == 100,
+                showProgress: true,
+                maxProgress: 100,
+                progress: progress,
+              ),
+              IOSNotificationDetails(),
+            ),
+            payload: '',
+          );
+          if (progress == 100) {
+            InstallPlugin.installApk(path, 'com.UNI00FF211');
+            await flutterLocalNotificationsPlugin.cancel(0);
           }
-        });
-      } else {
-        Ycn.toast('当前已是最新版本');
-      }
+        }
+      },
+    ).catchError((e) async {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        '更新包下载失败',
+        '点击重试',
+        NotificationDetails(
+          AndroidNotificationDetails(
+            'progress channel',
+            'progress channel',
+            'progress channel description',
+            channelShowBadge: false,
+            importance: Importance.Max,
+            priority: Priority.High,
+            onlyAlertOnce: true,
+            autoCancel: false,
+            showProgress: true,
+            maxProgress: 100,
+            progress: progress,
+          ),
+          IOSNotificationDetails(),
+        ),
+        payload: 'RELOAD_UPDATA_APK:::$url',
+      );
     });
   }
 

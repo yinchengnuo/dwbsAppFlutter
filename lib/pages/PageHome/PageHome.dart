@@ -1,3 +1,12 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:install_plugin/install_plugin.dart';
+import '../../common/flutterLocalNotificationsPlugin.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'TabMy/TabMy.dart';
 import '../../apis/app.dart';
 import 'TabComm/TabComm.dart';
@@ -91,9 +100,15 @@ class _PageHomeState extends State<PageHome> {
   void _appUpdata() {
     apiAppUpdata().then((status) async {
       if ((await PackageInfo.fromPlatform()).version != status.data['data']['version']) {
-        Ycn.modalUpdata(context, status.data['data']['version'], status.data['data']['message']).then((res) {
+        Ycn.modalUpdata(context, status.data['data']['version'], status.data['data']['message']).then((res) async {
           if (res != null) {
-            print(status.data['data']['url']);
+            if (Platform.isAndroid) {
+              if ((await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage] == PermissionStatus.granted) {
+                this._downloadUpdata(status.data['data']['url']);
+              } else {
+                Ycn.toast('更新失败，请为大卫博士开启写入存储权限');
+              }
+            }
             Ycn.toast('新版本开始下载...');
           }
         });
@@ -101,13 +116,109 @@ class _PageHomeState extends State<PageHome> {
     });
   }
 
+  // 下载新版安装包
+  void _downloadUpdata(url) async {
+    int progress = 0;
+    String path = '${(await getExternalStorageDirectory()).path}/new.apk';
+    Dio().download(
+      url,
+      path,
+      onReceiveProgress: (int receive, int total) async {
+        if ((receive / total * 100).floor() > progress) {
+          progress = (receive / total * 100).floor();
+          EventBus().globalData['updataProgress'] = progress;
+          await flutterLocalNotificationsPlugin.show(
+            0,
+            progress == 100 ? '更新包下载成功' : '更新包下载中',
+            '$progress%',
+            NotificationDetails(
+              AndroidNotificationDetails(
+                'progress channel',
+                'progress channel',
+                'progress channel description',
+                channelShowBadge: false,
+                importance: Importance.Max,
+                priority: Priority.High,
+                onlyAlertOnce: true,
+                autoCancel: progress == 100,
+                showProgress: true,
+                maxProgress: 100,
+                progress: progress,
+              ),
+              IOSNotificationDetails(),
+            ),
+            payload: '',
+          );
+          if (progress == 100) {
+            InstallPlugin.installApk(path, 'com.UNI00FF211');
+            await flutterLocalNotificationsPlugin.cancel(0);
+          }
+        }
+      },
+    ).catchError((e) async {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        '更新包下载失败',
+        '点击重试',
+        NotificationDetails(
+          AndroidNotificationDetails(
+            'progress channel',
+            'progress channel',
+            'progress channel description',
+            channelShowBadge: false,
+            importance: Importance.Max,
+            priority: Priority.High,
+            onlyAlertOnce: true,
+            autoCancel: false,
+            showProgress: true,
+            maxProgress: 100,
+            progress: progress,
+          ),
+          IOSNotificationDetails(),
+        ),
+        payload: 'RELOAD_UPDATA_APK:::$url',
+      );
+    });
+  }
+
+  // 初始化被本地通知
+  void _initLocalNotification() async {
+    await flutterLocalNotificationsPlugin.initialize(
+      InitializationSettings(
+        AndroidInitializationSettings('app_icon'),
+        IOSInitializationSettings(
+          requestSoundPermission: false,
+          requestBadgePermission: false,
+          requestAlertPermission: false,
+          onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+        ),
+      ),
+      onSelectNotification: onSelectNotification,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    this._getUserStatus();
+    this._initLocalNotification(); // 初始化系统通知
+    this._getUserStatus(); // 获取用户状态
+    // 监听点击首页显示更多文章
     EventBus().on('SHOWMOREARTICLE', (e) {
       Storage.setter('SHOWMOREARTICLE', 'SHOWMOREARTICLE');
       this._switchTab(2);
+    });
+    // 监听用户点击通知栏重新下载
+    EventBus().on('RELOAD_UPDATA_APK', (url) {
+      this._downloadUpdata(url);
+    });
+    // 监听用户点击通知栏未读消息
+    EventBus().on('READ_MESSAGE', (q) {
+      Navigator.of(context).pushNamed('/message-notification');
+    });
+    // 监听 token 失效跳转
+    EventBus().on('LOGIN', (arg) {
+      Storage.del('token');
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     });
   }
 
@@ -121,11 +232,6 @@ class _PageHomeState extends State<PageHome> {
     precacheImage(AssetImage('lib/images/home/tabbar/comm-act.png'), context);
     precacheImage(AssetImage('lib/images/home/tabbar/my.png'), context);
     precacheImage(AssetImage('lib/images/home/tabbar/my-act.png'), context);
-
-    // 监听 token 失效跳转
-    EventBus().on('LOGIN', (arg) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-    });
 
     return Consumer2(builder: (BuildContext context, ProviderUserInfo userinfo, ProviderMessage message, Widget child) {
       this.__message = message;
@@ -164,8 +270,7 @@ class _PageHomeState extends State<PageHome> {
                                         Positioned(top: Ycn.px(8), left: Ycn.px(98), child: RedDot(number: this.__message.totalMessageNum)),
                                       ],
                                     )
-                                  : CustomBottomNavigationBarItem(
-                                      item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
+                                  : CustomBottomNavigationBarItem(item: item, index: this._tabList.indexOf(item), activeIndex: this._activeIndex),
                             ),
                           ),
                         ),

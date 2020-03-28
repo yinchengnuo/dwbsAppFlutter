@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ProviderUserInfo with ChangeNotifier {
-  final Map _userinfo = Map();
+  final Map _userinfo = {};
 
   Map get userinfo => this._userinfo;
 

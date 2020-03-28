@@ -1,5 +1,6 @@
 import 'package:dwbs_app_flutter/provider/ProviderMessage.dart';
 import 'package:dwbs_app_flutter/provider/ProviderUserInfo.dart';
+import 'package:fluwx/fluwx.dart';
 import 'package:provider/provider.dart';
 
 import 'componetns/AppItem.dart';
@@ -19,6 +20,7 @@ class TabMy extends StatefulWidget {
 class _TabMyState extends State<TabMy> {
   ProviderMessage __message;
   ProviderUserInfo __userinfo;
+
   @override
   Widget build(BuildContext context) {
     return Consumer2(builder: (BuildContext context, ProviderUserInfo userinfo, ProviderMessage message, Widget child) {
@@ -57,11 +59,16 @@ class _TabMyState extends State<TabMy> {
                                   alignment: Alignment(-1, -1),
                                   decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Ycn.px(50))),
-                                    image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(this.__userinfo.userinfo['avatar'])),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: this.__userinfo.userinfo.length == 0
+                                          ? AssetImage('lib/images/public/logo.png')
+                                          : NetworkImage(this.__userinfo.userinfo['avatar']),
+                                    ),
                                   ),
                                   child: Container(
                                     transform: Matrix4.translationValues(Ycn.px(56), Ycn.px(49), 0),
-                                    child: this.__userinfo.userinfo['store']
+                                    child: this.__userinfo.userinfo.length > 0 && this.__userinfo.userinfo['store']
                                         ? Image.asset('lib/images/home/my/has-shop.png', width: Ycn.px(53), height: Ycn.px(63))
                                         : null,
                                   ),
@@ -71,29 +78,33 @@ class _TabMyState extends State<TabMy> {
                                     color: Colors.transparent,
                                     padding: EdgeInsets.fromLTRB(Ycn.px(0), Ycn.px(10), Ycn.px(0), Ycn.px(10)),
                                     margin: EdgeInsets.fromLTRB(Ycn.px(16), Ycn.px(0), Ycn.px(16), Ycn.px(0)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            ConstrainedBox(
-                                              constraints: BoxConstraints(maxWidth: Ycn.px(234)),
-                                              child: Text(
-                                                '${this.__userinfo.userinfo['nickname']}顶顶顶顶顶顶顶顶顶大大大大大大',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(fontSize: Ycn.px(32), height: 1.25),
+                                    child: this.__userinfo.userinfo.length > 0
+                                        ? Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(maxWidth: Ycn.px(234)),
+                                                    child: Text(
+                                                      '${this.__userinfo.userinfo['nickname']}',
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(fontSize: Ycn.px(32), height: 1.25),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: Ycn.px(15)),
+                                                  UserLevel(level: '${this.__userinfo.userinfo['level']}'),
+                                                ],
                                               ),
-                                            ),
-                                            SizedBox(width: Ycn.px(15)),
-                                            UserLevel(level: '${this.__userinfo.userinfo['level']}'),
-                                          ],
-                                        ),
-                                        Text('ID:${this.__userinfo.userinfo['uuid']}',
-                                            style: TextStyle(fontSize: Ycn.px(24), color: Theme.of(context).textTheme.body2.color)),
-                                      ],
-                                    ),
+                                              Text(
+                                                'ID:${this.__userinfo.userinfo['uuid']}',
+                                                style: TextStyle(fontSize: Ycn.px(24), color: Theme.of(context).textTheme.body2.color),
+                                              ),
+                                            ],
+                                          )
+                                        : Text('未登录'),
                                   ),
                                 ),
                                 Container(
@@ -161,7 +172,16 @@ class _TabMyState extends State<TabMy> {
                 height: Ycn.px(180),
                 child: Row(
                   children: <Widget>[
-                    ActiveItem(img: 'lib/images/home/my/zhengbasai.png', title: '争霸赛', onTap: () => Ycn.toast('点击了争霸赛')),
+                    ActiveItem(
+                        img: 'lib/images/home/my/zhengbasai.png',
+                        title: '争霸赛',
+                        onTap: () async {
+                          if (await isWeChatInstalled()) {
+                            launchWeChatMiniProgram(username: "gh_ccc3d7c5cbe0");
+                          } else {
+                            Ycn.toast('微信未安装');
+                          }
+                        }),
                     ActiveItem(img: 'lib/images/home/my/shalong.png', title: '线下沙龙', onTap: () => Ycn.toast('暂未开放')),
                     ActiveItem(img: 'lib/images/home/my/mixun.png', title: '密训营', onTap: () => Ycn.toast('暂未开放')),
                   ],

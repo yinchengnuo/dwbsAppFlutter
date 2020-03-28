@@ -21,6 +21,7 @@ import '../pages/PageRewardOut/PageRewardOut.dart';
 import '../pages/PageDownOrder/PageDownOrder.dart';
 import '../pages/PagePhoneArea/PagePhoneArea.dart';
 import '../pages/PageSystemSet/PageSystemSet.dart';
+import '../pages/PageBindPhone/PageBindPhone.dart';
 import '../pages/PageChooseSize/PageChooseSize.dart';
 import '../pages/PageGoodDetail/PageGoodDetail.dart';
 import '../pages/PageManageTeam/PageManageTeam.dart';
@@ -77,6 +78,7 @@ Map routes = <String, WidgetBuilder>{
   '/system-set': (ctx) => PageSystemSet(), // 系统设置页面
   '/phone-area': (ctx) => PagePhoneArea(), // 选择国家地区页面
   '/down-order': (ctx) => PageDownOrder(), // 下级订单页面
+  '/bind-phone': (ctx) => PageBindPhone(), // 微信登陆绑定手机页面
   '/manage-team': (ctx) => PageManageTeam(), // 团队管理页面
   '/good-detail': (ctx) => PageGoodDetail(), // 商品详情页面
   '/choose-size': (ctx) => PageChooseSize(), // 选择尺寸页面

@@ -1,4 +1,5 @@
-import '../../common/Ycn.dart';
+
+import 'package:dwbs_app_flutter/common/Ycn.dart';
 import 'package:flutter/material.dart';
 
 class Developing extends StatefulWidget {

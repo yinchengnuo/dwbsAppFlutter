@@ -3,6 +3,7 @@ import '../common/Ycn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:photo_view/photo_view.dart';
 
 // 取消回弹效果
 class NoBehavior extends ScrollBehavior {
@@ -372,8 +373,7 @@ class CustomCounter extends StatelessWidget {
 // 封装过的水波纹类
 class MaterialInkWell extends StatelessWidget {
   final onTap, onLongPress, onTapCancel, child, padding, borderRadius;
-  const MaterialInkWell({Key key, this.onTap, this.child, this.padding, this.onLongPress, this.onTapCancel, this.borderRadius})
-      : super(key: key);
+  const MaterialInkWell({Key key, this.onTap, this.child, this.padding, this.onLongPress, this.onTapCancel, this.borderRadius}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -532,6 +532,7 @@ class AppBarTextAction extends StatelessWidget {
   }
 }
 
+// 路由动画
 class FadeRoute extends PageRouteBuilder {
   final Widget page;
   FadeRoute({this.page})
@@ -548,9 +549,60 @@ class FadeRoute extends PageRouteBuilder {
             Animation<double> secondaryAnimation,
             Widget child,
           ) =>
-              FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
+              FadeTransition(opacity: animation, child: child),
         );
+}
+
+// 图片预览
+class PreviewImage extends StatelessWidget {
+  const PreviewImage({
+    this.imageProvider, //图片
+    this.backgroundDecoration, //背景修饰
+    this.minScale, //最大缩放倍数
+    this.maxScale, //最小缩放倍数
+    this.heroTag, //hero动画tagid
+  });
+  final ImageProvider imageProvider;
+  final Decoration backgroundDecoration;
+  final dynamic minScale;
+  final dynamic maxScale;
+  final String heroTag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        constraints: BoxConstraints.expand(
+          height: MediaQuery.of(context).size.height,
+        ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: PhotoView(
+                imageProvider: imageProvider,
+                backgroundDecoration: backgroundDecoration,
+                minScale: minScale,
+                maxScale: maxScale,
+                heroAttributes: PhotoViewHeroAttributes(tag: heroTag),
+                enableRotation: true,
+              ),
+            ),
+            Positioned(
+              //右上角关闭按钮
+              right: 10,
+              top: MediaQuery.of(context).padding.top,
+              child: IconButton(
+                icon: Icon(Icons.close, size: 30, color: Colors.white),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

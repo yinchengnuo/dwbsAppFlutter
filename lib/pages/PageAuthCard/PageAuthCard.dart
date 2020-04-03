@@ -10,7 +10,6 @@ import 'package:dwbs_app_flutter/common/components.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dwbs_app_flutter/common/PAGEPreviewImage/PAGEPreviewImage.dart';
 
 class PageAuthCard extends StatefulWidget {
   PageAuthCard({Key key}) : super(key: key);
@@ -162,7 +161,7 @@ class _PageAuthCardState extends State<PageAuthCard> with SingleTickerProviderSt
   // 点击预览图片
   void _previewImg() {
     Navigator.of(context).push(FadeRoute(
-        page: PAGEPreviewImage(
+        page: PreviewImage(
       imageProvider: NetworkImage(this._data['url']),
       heroTag: 'simple',
     )));

@@ -1,3 +1,6 @@
+import 'package:dwbs_app_flutter/common/Ycn.dart';
+import 'package:dwbs_app_flutter/common/components.dart';
+import 'package:dwbs_app_flutter/pages/Alphas/PageAlpha.dart';
 import 'package:flutter/material.dart';
 
 class AllIcon extends StatelessWidget {
@@ -5,28 +8,37 @@ class AllIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('icons')),
-      body: Builder(
-        builder: (BuildContext context) {
-          return GridView.builder(
-            itemCount: icons.length,
-            physics: BouncingScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 13, mainAxisSpacing: 0, crossAxisSpacing: 0),
-            itemBuilder: (BuildContext context, index) {
-              return IconButton(
-                icon: Icon(icons[index]['icon']),
-                onPressed: () {
-                  Scaffold.of(context).hideCurrentSnackBar();
-                  Scaffold.of(context).showSnackBar(SnackBar(content: Text(icons[index]['name'])));
-                },
-              );
-            },
-          );
-        },
+    return Theme(
+      data: Theme.of(context).copyWith(scaffoldBackgroundColor: Colors.white),
+      child: Scaffold(
+        appBar: Ycn.appBar(
+          context,
+          title: 'Icons',
+          action: AppBarTextAction(
+            text: '开发中',
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PageAlpha())),
+          ),
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            return GridView.builder(
+              itemCount: icons.length,
+              physics: BouncingScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 13, mainAxisSpacing: 0, crossAxisSpacing: 0),
+              itemBuilder: (BuildContext context, index) {
+                return IconButton(
+                  icon: Icon(icons[index]['icon']),
+                  onPressed: () {
+                    Scaffold.of(context).hideCurrentSnackBar();
+                    Scaffold.of(context).showSnackBar(SnackBar(content: Text(icons[index]['name'])));
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
-    ;
   }
 }
 

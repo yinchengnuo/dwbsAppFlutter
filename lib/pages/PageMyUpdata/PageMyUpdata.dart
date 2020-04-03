@@ -9,7 +9,6 @@ import 'package:dwbs_app_flutter/common/components.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:dwbs_app_flutter/common/PAGEPreviewImage/PAGEPreviewImage.dart';
 
 class PageMyUpdata extends StatefulWidget {
   PageMyUpdata({Key key}) : super(key: key);
@@ -163,7 +162,7 @@ class _PageMyUpdataState extends State<PageMyUpdata> {
                       onTap: () async {
                         ByteData byteData = await item.getByteData();
                         Navigator.of(context).push(FadeRoute(
-                          page: PAGEPreviewImage(
+                          page: PreviewImage(
                             imageProvider: MemoryImage(byteData.buffer.asUint8List()),
                             heroTag: 'simple',
                           ),

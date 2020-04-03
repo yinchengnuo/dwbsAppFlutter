@@ -149,8 +149,6 @@ class ProviderMessage with ChangeNotifier {
             'your channel id',
             'your channel name',
             'your channel description',
-            icon: 'app_icon',
-            style: AndroidNotificationStyle.BigText,
             importance: Importance.Max,
             priority: Priority.High,
           ),

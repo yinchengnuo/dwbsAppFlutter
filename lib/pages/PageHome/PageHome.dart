@@ -105,11 +105,11 @@ class _PageHomeState extends State<PageHome> {
             if (Platform.isAndroid) {
               if ((await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage] == PermissionStatus.granted) {
                 this._downloadUpdata(status.data['data']['url']);
+                Ycn.toast('新版本开始下载...');
               } else {
                 Ycn.toast('更新失败，请为大卫博士开启写入存储权限');
               }
             }
-            Ycn.toast('新版本开始下载...');
           }
         });
       }
